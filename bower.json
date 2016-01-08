@@ -1,0 +1,23 @@
+{
+  "name": "checklist",
+  "description": "Checklist for webdesigners",
+  "version": "0.1.0",
+  "keywords": [
+    "checklist",
+    "front-end"
+  ],
+  "main": [
+    "./dist/stylesheets/checklist.css"
+  ],
+  "ignore": [
+    "log",
+    "docs",
+    "grunt",
+    ".editorconfig",
+    ".gitignore"
+  ],
+  "dependencies": {
+    "jquery": "~2.0.0",
+  },
+  "devDependencies": {}
+}
