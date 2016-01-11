@@ -1,0 +1,79 @@
+body {
+  background: lightslategrey;
+  color: whitesmoke;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 18px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: normal;
+  margin: 50px 0 0 0;
+}
+
+.checklist {
+  width: 500px;
+  margin: 50px auto;
+}
+
+.checklist form {
+  display: flex;
+}
+
+.checklist form input {
+  flex-grow: 1;
+  font-size: inherit;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  padding: 10px;
+  border: 0;
+  background: whitesmoke;
+  color: lightslategrey;
+}
+
+.checklist form button {
+  font-size: inherit;
+  background: whitesmoke;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 10px;
+  border: 0;
+  margin-left: 1px;
+  color: lightslategrey;
+}
+
+.checklist form button:hover {
+  cursor: pointer;
+}
+
+.checklist ul {
+  margin: 25px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist ul li {
+  display: flex;
+  margin: 25px 0;
+}
+
+.checklist ul li span {
+  flex-grow: 1;
+}
+
+.checklist ul li span:hover {
+  cursor: pointer;
+}
+
+.checklist ul li.checklist__item--complete .checklist-item__label {
+  text-decoration: line-through;
+  color: lightsteelblue;
+}
+
+.checklist ul li i:hover {
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=checklist.css.map */

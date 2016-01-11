@@ -9,12 +9,12 @@ $libPath: '../../vendor';
 
 // CORE
 // -------------------
-@import 'core/layout';
-@import 'core/type';
+// @import 'core/layout';
+// @import 'core/type';
 
 // MODULE DEFINITION
 // -------------------
-// @import 'modules/';
+@import 'modules/checklist.scss';
 
 
 // MODULE DEPENDENCIES

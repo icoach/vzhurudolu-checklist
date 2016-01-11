@@ -8,11 +8,11 @@ module.exports = {
     livereload: true
   },
   styles: {
-    files: ['src/stylesheets/**/*.scss'],
+    files: ['src/stylesheets/**/*'],
     tasks: ['sass']
   },
   js: {
-    files: 'src/javascripts/**/*.js',
-    tasks: ['neuter']
+    files: 'src/javascripts/**/*',
+    tasks: ['browserify']
   }
 };

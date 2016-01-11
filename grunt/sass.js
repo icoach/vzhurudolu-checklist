@@ -10,7 +10,7 @@ module.exports = {
       precision: 6,
       sourceComments: false,
       sourceMap: true,
-      outputStyle: 'expanded'
+      outputStyle: 'expanded',
       loadPath: 'vendor/bootstrap/scss'
     },
     files: [
