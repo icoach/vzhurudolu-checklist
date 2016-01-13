@@ -1,3 +1,8 @@
+//
+// Checklist App
+//
+// @author: Martin Staněk (github: @icoach)
+// -------------------
 
 var React = require('react');
 var ReactDOM = require('react-dom');

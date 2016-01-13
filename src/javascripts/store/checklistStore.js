@@ -13,32 +13,21 @@ var checklistSource = require('../source/checklistSource')
 
 class ChecklistStore {
     constructor() {
-        this.errorMessage = null;
+        this.errorMessage = null
         this.loading = false
-        this.items = []
-        this.groups = []
+        this.items = {} // We must be able to push key => value, array is not enough
+        this.groups = {}
 
         this.bindActions(checklistActions)
 
-        // this.items = {
-        //     starter_item_a: {
-        //         text: 'Click an item to mark it as complete',
-        //         complete: false
-        //     },
-        //     starter_item_b: {
-        //         text: 'Use the "x" to remove it completely',
-        //         complete: false
-        //     }
-        // }
         // if (localStorage.items) {
         //     this.items = JSON.parse(localStorage.items)
         // }
         this.registerAsync(checklistSource);
     }
     addItem(label) {
-        // create random id...copypasta from the alt todo example
-        var id = (+new Date() + Math.floor(Math.random() * 999998)).toString(36)
-        this.items[id] = {label: label, group_id: 1, desc: '', done: false}
+        var id = Date.now()
+        this.items[id] = { id: id, group_id: 1, label: label, desc: '', done: false }
         // localStorage.items = JSON.stringify(this.items)
     }
     toggleItem(id) {
@@ -49,12 +38,24 @@ class ChecklistStore {
         delete this.items[id]
         // localStorage.items = JSON.stringify(this.items);
     }
-    updateItems(items) {
+    
+    loadChecklist(data) {
         this.loading = false
-        this.items = items
-    }
-    updateGroups(groups) {
-        this.groups = groups
+        var name = data.name // Checklist title
+        var groups = data.groups
+
+        // Push fetched items to the state
+        for (var key in groups) {
+            var items = groups[key].items
+            var groupId = groups[key].id
+            this.groups[groupId] = groups[key]
+            
+            for (var key_item in items) {
+                var id = items[key_item].id
+                items[key_item].group_id = groupId 
+                this.items[id] = items[key_item]
+            }
+        }
     }
     loadProgress() {
         this.loading = true

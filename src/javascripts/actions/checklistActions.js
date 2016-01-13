@@ -21,13 +21,10 @@ class ChecklistActions {
         )
     }
 
-    updateItems(items) {
-		return items;
+    loadChecklist(data) {
+		return data;
 	}
 
-	updateGroups(groups) {
-		return groups;
-	}
 }
 
 module.exports = alt.createActions(ChecklistActions);

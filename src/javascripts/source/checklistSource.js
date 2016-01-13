@@ -4,66 +4,87 @@
 
 var checklistActions = require('../actions/checklistActions');
 
-var mockGroups = [
-  {id: 1, label: 'Sémantika'}
-];
-
-var mockData = [
-  { id: 0, group_id: 1, label: 'Ikony a favikony', desc: '(<a href="#">Generátor</a>)', done: false },
-  { id: 2, group_id: 1, label: 'Facebook Open Graph', desc: '(<a href="#">Validátor</a>)', done: false },
-  { id: 3, group_id: 1, label: 'Twitter Cards', desc: '(<a href="#">Validátor</a>)', done: false },
-  { id: 4, group_id: 1, label: 'Strukturovaná data pro Google', desc: '(<a href="#">Tester</a>, <a href="#">Článek</a>)', done: false },
-  { id: 5, group_id: 1, label: 'Správný title, meta desc a struktura nadpisů', desc: '(<a href="#">Tester</a>)', done: false },
-];
+var mockData = {
+  "id": "abs34xay23",
+  "name": "My checklist",
+  "created": "2015-08-05T08:40:51.620Z",
+  "groups": [
+    {
+      "id": 1,
+      "name": "Sémantika",
+      "items": [
+        {
+          "id": 1,
+          "label": "Ikony a favicony",
+          "desc": "<a href=\"http://realfavicongenerator.net\">Generátor</a>",
+          "done": true
+        },
+        {
+          "id": 2,
+          "label": "Facebook Open Graph",
+          "desc": "",
+          "done": false
+        },
+        {
+          "id": 3,
+          "label": "Twitter Cards",
+          "desc": "",
+          "done": false
+        },
+        {
+          "id": 3,
+          "label": "Strukturovaná data pro Google",
+          "desc": "",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Struktura webu",
+      "items": [
+        {
+          "id": 4,
+          "label": "Kontrola ztracených odkazů",
+          "desc": "<a href=\"http://realfavicongenerator.net\">Generátor</a>",
+          "done": true
+        },
+        {
+          "id": 5,
+          "label": "Chybové stránky: 404 a 50x",
+          "desc": "<a href=\"http://realfavicongenerator.net\">Generátor</a>",
+          "done": false
+        }
+      ]
+    }
+  ]
+}
 
 var ChecklistSource = {
-  fetchGroups() {
+
+  fetchChecklist(id) {
     return {
       remote() {
-
         return new Promise(function (resolve, reject) {
-          // simulate an asynchronous flow where data is fetched on
-          // a remote server somewhere.
-          setTimeout(function () {
-
-            // change this to `false` to see the error action being handled.
-            if (true) {
-              // resolve with some mock data
-              resolve(mockGroups);
-            } else {
-              reject('Things have broken');
-            }
-          }, 250)
+          // Async call to get Checklist
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', encodeURI('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23'));
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  // Parse JSON response
+                  var result = JSON.parse(xhr.responseText)
+                  resolve(result)
+              }
+              else {
+                  reject('Things have broken');
+                  // alert('Request failed.  Returned status of ' + xhr.status);
+              }
+          };
+          xhr.send();
         })
       },
 
-      success: checklistActions.updateGroups,
-      error: checklistActions.loadFailed,
-      loading: checklistActions.loadProgress
-    }
-  },
-
-  fetchChecklistItems() {
-    return {
-      remote() {
-
-        return new Promise(function (resolve, reject) {
-          // simulate an asynchronous flow where data is fetched on
-          // a remote server somewhere.
-          setTimeout(function () {
-
-            // change this to `false` to see the error action being handled.
-            if (true) {
-              // resolve with some mock data
-              resolve(mockData);
-            } else {
-              reject('Things have broken');
-            }
-          }, 250)
-        })
-      },
-
-      success: checklistActions.updateItems,
+      success: checklistActions.loadChecklist,
       error: checklistActions.loadFailed,
       loading: checklistActions.loadProgress
     }

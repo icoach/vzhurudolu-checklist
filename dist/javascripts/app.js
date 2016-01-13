@@ -20608,14 +20608,9 @@ var ChecklistActions = function () {
     }
 
     _createClass(ChecklistActions, [{
-        key: 'updateItems',
-        value: function updateItems(items) {
-            return items;
-        }
-    }, {
-        key: 'updateGroups',
-        value: function updateGroups(groups) {
-            return groups;
+        key: 'loadChecklist',
+        value: function loadChecklist(data) {
+            return data;
         }
     }]);
 
@@ -20654,11 +20649,13 @@ var Checklist = React.createClass({
 
     getInitialState: function getInitialState() {
         return {
-            data: checklistStore.getState().items
+            groups: checklistStore.getState().groups,
+            items: checklistStore.getState().items
         };
     },
     componentDidMount: function componentDidMount() {
-        checklistStore.fetchChecklistItems(); // method is automagically binded by checklistStore.registerAsync()
+        var id = "23xyz"; // ID should be retrieved from URL
+        checklistStore.fetchChecklist(id); // method is automagically binded by checklistStore.registerAsync()
         checklistStore.listen(this.onChange);
     },
     componentWillUnmount: function componentWillUnmount() {
@@ -20677,11 +20674,30 @@ var Checklist = React.createClass({
             );
         }
 
+        var groups = [];
+        var data = this.state.groups;
+
+        for (var key in data) {
+            var group = data[key];
+
+            var items = [];
+            for (var key2 in this.state.items) {
+                var item = this.state.items[key2];
+                if (item.group_id == group.id) items.push(item);
+            }
+
+            groups.push(React.createElement(List, {
+                group_id: group.id,
+                key: group.id,
+                name: group.name,
+                items: items }));
+        }
+
         return React.createElement(
             'div',
             { className: 'checklist' },
             React.createElement(NewItemForm, null),
-            React.createElement(List, { data: this.state.data })
+            groups
         );
     }
 });
@@ -20747,21 +20763,31 @@ var List = React.createClass({
     displayName: 'List',
 
     render: function render() {
-        var list_items = [],
-            self = this;
-        for (var item_id in this.props.data) {
-            var item = this.props.data[item_id];
-            list_items.push(React.createElement(Item, {
+        var items = [];
+        var data = this.props.items;
+        for (var key in data) {
+            var item = data[key];
+            items.push(React.createElement(Item, {
+                item_id: item.id,
+                key: item.id,
                 done: item.done,
                 desc: item.desc,
-                label: item.label,
-                key: item_id,
-                item_id: item_id }));
+                label: item.label }));
         }
+
         return React.createElement(
-            'ul',
-            null,
-            list_items
+            'div',
+            { className: 'checklist__group' },
+            React.createElement(
+                'h2',
+                null,
+                this.props.name
+            ),
+            React.createElement(
+                'ul',
+                null,
+                items
+            )
         );
     }
 });
@@ -20783,7 +20809,7 @@ var NewItemForm = React.createClass({
 
     handleSubmit: function handleSubmit(e) {
         e.preventDefault();
-        var input_node = this.refs.item_text.getDOMNode();
+        var input_node = this.refs.item_label.getDOMNode();
         if (input_node.value) {
             checklistActions.addItem(input_node.value);
             input_node.value = '';
@@ -20794,7 +20820,7 @@ var NewItemForm = React.createClass({
         return React.createElement(
             'form',
             { onSubmit: this.handleSubmit },
-            React.createElement('input', { type: 'text', ref: 'item_text' }),
+            React.createElement('input', { type: 'text', ref: 'item_label' }),
             React.createElement(
                 'button',
                 { ref: 'add_button' },
@@ -20809,6 +20835,12 @@ module.exports = NewItemForm;
 },{"../actions/checklistActions":172,"react":170}],178:[function(require,module,exports){
 'use strict';
 
+//
+// Checklist App
+//
+// @author: Martin Staněk (github: @icoach)
+// -------------------
+
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Checklist = require('./components/checklist.jsx');
@@ -20816,7 +20848,7 @@ var Checklist = require('./components/checklist.jsx');
 ReactDOM.render(React.createElement(Checklist), document.querySelector('#app'));
 
 },{"./components/checklist.jsx":174,"react":170,"react-dom":41}],179:[function(require,module,exports){
-'use strict';
+"use strict";
 
 //
 // Sources
@@ -20824,57 +20856,74 @@ ReactDOM.render(React.createElement(Checklist), document.querySelector('#app'));
 
 var checklistActions = require('../actions/checklistActions');
 
-var mockGroups = [{ id: 1, label: 'Sémantika' }];
-
-var mockData = [{ id: 0, group_id: 1, label: 'Ikony a favikony', desc: '(<a href="#">Generátor</a>)', done: false }, { id: 2, group_id: 1, label: 'Facebook Open Graph', desc: '(<a href="#">Validátor</a>)', done: false }, { id: 3, group_id: 1, label: 'Twitter Cards', desc: '(<a href="#">Validátor</a>)', done: false }, { id: 4, group_id: 1, label: 'Strukturovaná data pro Google', desc: '(<a href="#">Tester</a>, <a href="#">Článek</a>)', done: false }, { id: 5, group_id: 1, label: 'Správný title, meta desc a struktura nadpisů', desc: '(<a href="#">Tester</a>)', done: false }];
+var mockData = {
+  "id": "abs34xay23",
+  "name": "My checklist",
+  "created": "2015-08-05T08:40:51.620Z",
+  "groups": [{
+    "id": 1,
+    "name": "Sémantika",
+    "items": [{
+      "id": 1,
+      "label": "Ikony a favicony",
+      "desc": "<a href=\"http://realfavicongenerator.net\">Generátor</a>",
+      "done": true
+    }, {
+      "id": 2,
+      "label": "Facebook Open Graph",
+      "desc": "",
+      "done": false
+    }, {
+      "id": 3,
+      "label": "Twitter Cards",
+      "desc": "",
+      "done": false
+    }, {
+      "id": 3,
+      "label": "Strukturovaná data pro Google",
+      "desc": "",
+      "done": false
+    }]
+  }, {
+    "id": 2,
+    "name": "Struktura webu",
+    "items": [{
+      "id": 4,
+      "label": "Kontrola ztracených odkazů",
+      "desc": "<a href=\"http://realfavicongenerator.net\">Generátor</a>",
+      "done": true
+    }, {
+      "id": 5,
+      "label": "Chybové stránky: 404 a 50x",
+      "desc": "<a href=\"http://realfavicongenerator.net\">Generátor</a>",
+      "done": false
+    }]
+  }]
+};
 
 var ChecklistSource = {
-  fetchGroups: function fetchGroups() {
+  fetchChecklist: function fetchChecklist(id) {
     return {
       remote: function remote() {
-
         return new Promise(function (resolve, reject) {
-          // simulate an asynchronous flow where data is fetched on
-          // a remote server somewhere.
-          setTimeout(function () {
-
-            // change this to `false` to see the error action being handled.
-            if (true) {
-              // resolve with some mock data
-              resolve(mockGroups);
+          // Async call to get Checklist
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', encodeURI('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23'));
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              // Parse JSON response
+              var result = JSON.parse(xhr.responseText);
+              resolve(result);
             } else {
               reject('Things have broken');
+              // alert('Request failed.  Returned status of ' + xhr.status);
             }
-          }, 250);
+          };
+          xhr.send();
         });
       },
 
-      success: checklistActions.updateGroups,
-      error: checklistActions.loadFailed,
-      loading: checklistActions.loadProgress
-    };
-  },
-  fetchChecklistItems: function fetchChecklistItems() {
-    return {
-      remote: function remote() {
-
-        return new Promise(function (resolve, reject) {
-          // simulate an asynchronous flow where data is fetched on
-          // a remote server somewhere.
-          setTimeout(function () {
-
-            // change this to `false` to see the error action being handled.
-            if (true) {
-              // resolve with some mock data
-              resolve(mockData);
-            } else {
-              reject('Things have broken');
-            }
-          }, 250);
-        });
-      },
-
-      success: checklistActions.updateItems,
+      success: checklistActions.loadChecklist,
       error: checklistActions.loadFailed,
       loading: checklistActions.loadProgress
     };
@@ -20908,21 +20957,11 @@ var ChecklistStore = function () {
 
         this.errorMessage = null;
         this.loading = false;
-        this.items = [];
-        this.groups = [];
+        this.items = {}; // We must be able to push key => value, array is not enough
+        this.groups = {};
 
         this.bindActions(checklistActions);
 
-        // this.items = {
-        //     starter_item_a: {
-        //         text: 'Click an item to mark it as complete',
-        //         complete: false
-        //     },
-        //     starter_item_b: {
-        //         text: 'Use the "x" to remove it completely',
-        //         complete: false
-        //     }
-        // }
         // if (localStorage.items) {
         //     this.items = JSON.parse(localStorage.items)
         // }
@@ -20932,9 +20971,8 @@ var ChecklistStore = function () {
     _createClass(ChecklistStore, [{
         key: 'addItem',
         value: function addItem(label) {
-            // create random id...copypasta from the alt todo example
-            var id = (+new Date() + Math.floor(Math.random() * 999998)).toString(36);
-            this.items[id] = { label: label, group_id: 1, desc: '', done: false };
+            var id = Date.now();
+            this.items[id] = { id: id, group_id: 1, label: label, desc: '', done: false };
             // localStorage.items = JSON.stringify(this.items)
         }
     }, {
@@ -20950,15 +20988,24 @@ var ChecklistStore = function () {
             // localStorage.items = JSON.stringify(this.items);
         }
     }, {
-        key: 'updateItems',
-        value: function updateItems(items) {
+        key: 'loadChecklist',
+        value: function loadChecklist(data) {
             this.loading = false;
-            this.items = items;
-        }
-    }, {
-        key: 'updateGroups',
-        value: function updateGroups(groups) {
-            this.groups = groups;
+            var name = data.name; // Checklist title
+            var groups = data.groups;
+
+            // Push fetched items to the state
+            for (var key in groups) {
+                var items = groups[key].items;
+                var groupId = groups[key].id;
+                this.groups[groupId] = groups[key];
+
+                for (var key_item in items) {
+                    var id = items[key_item].id;
+                    items[key_item].group_id = groupId;
+                    this.items[id] = items[key_item];
+                }
+            }
         }
     }, {
         key: 'loadProgress',
