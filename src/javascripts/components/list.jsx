@@ -4,9 +4,11 @@
 
 var React = require('react')
 var Item = require('./item.jsx')
+var ItemForm = require('./itemForm.jsx')
 
 var List = React.createClass({
     render: function() {
+
         var items = []
         var data = this.props.items
         for (var key in data) {
@@ -27,6 +29,8 @@ var List = React.createClass({
                 <ul>
                     {items}
                 </ul>
+
+                <ItemForm groupId={this.props.group_id} />
             </div>
         )
     }

@@ -61,10 +61,67 @@ var mockData = {
 }
 
 var ChecklistSource = {
+  save: {
+      remote: function (item) {
+        return new Promise(function (resolve, reject) {
+          // Async call to post Checklist Item
+          var xhr = new XMLHttpRequest();
+debugger
+          xhr.open('POST', encodeURI('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items'));
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onload = function() {
+              if (xhr.status === 201 || xhr.status === 200) {
+                  // Item has been added
+                  resolve()
+              }
+              else {
+                  // alert('Request failed.  Returned status of ' + xhr.status);
+                  reject('Položku se nepodařilo uložit')
+              }
+          };
+          xhr.send(JSON.stringify(item));
 
-  fetchChecklist(id) {
-    return {
-      remote() {
+        })
+      },
+
+      success: checklistActions.asyncSuccess,
+      error: checklistActions.asyncFailed,
+      loading: checklistActions.asyncProgress
+
+  },
+
+  remove: {
+      remote: function (id) {
+debugger
+        return new Promise(function (resolve, reject) {
+          // Async call to post Checklist Item
+          var xhr = new XMLHttpRequest();
+          xhr.open('DELETE', encodeURI('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items/' + id));
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onload = function() {
+              if (xhr.status === 200) {
+                  // Item has been removed
+                  resolve()
+              }
+              else {
+                  // alert('Request failed.  Returned status of ' + xhr.status);
+                  reject('Položku se nepodařilo odstranit.')
+              }
+          };
+          xhr.send();
+
+        })
+      },
+
+      success: checklistActions.asyncSuccess,
+      error: checklistActions.asyncFailed,
+      loading: checklistActions.asyncProgress
+
+  },
+
+  fetchChecklist: {
+      remote: function (id) {
+        debugger
         return new Promise(function (resolve, reject) {
           // Async call to get Checklist
           var xhr = new XMLHttpRequest();
@@ -85,9 +142,9 @@ var ChecklistSource = {
       },
 
       success: checklistActions.loadChecklist,
-      error: checklistActions.loadFailed,
-      loading: checklistActions.loadProgress
-    }
+      error: checklistActions.asyncFailed,
+      loading: checklistActions.asyncProgress
+   
   }
 };
 

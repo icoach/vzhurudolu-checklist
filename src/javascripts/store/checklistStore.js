@@ -6,8 +6,8 @@
 
 var alt = require('../alt')
 var checklistActions = require('../actions/checklistActions')
-var checklistSource = require('../source/checklistSource')
-
+// var checklistSource = require('../source/checklistSource')
+var API = require('superagent')
 
 // Class definition
 
@@ -20,26 +20,37 @@ class ChecklistStore {
 
         this.bindActions(checklistActions)
 
-        // if (localStorage.items) {
-        //     this.items = JSON.parse(localStorage.items)
-        // }
-        this.registerAsync(checklistSource);
+        // this.registerAsync(checklistSource)
     }
-    addItem(label) {
-        var id = Date.now()
-        this.items[id] = { id: id, group_id: 1, label: label, desc: '', done: false }
-        // localStorage.items = JSON.stringify(this.items)
+    addItem(item) {
+        this.items[item.id] = item
+
+        API.post('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items')
+        .send(JSON.stringify(item))
+        .end(function(err, res){
+
+        })
     }
+
     toggleItem(id) {
         this.items[id].done = !this.items[id].done
-        // localStorage.items = JSON.stringify(this.items)
+
+        API.post('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items')
+        .send(JSON.stringify(this.items[id]))
+        .end(function(err, res){
+            
+        });
     }
     removeItem(id) {
         delete this.items[id]
-        // localStorage.items = JSON.stringify(this.items);
+
+        API.del('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items/' + id)
+        .end(function(err, res){
+
+        })
     }
     
-    loadChecklist(data) {
+    fetchChecklist(data) {
         this.loading = false
         var name = data.name // Checklist title
         var groups = data.groups
@@ -57,10 +68,16 @@ class ChecklistStore {
             }
         }
     }
-    loadProgress() {
+
+    asyncSuccess() {
+        debugger
+        this.loading = false
+    }
+
+    asyncProgress() {
         this.loading = true
     }
-    loadFailed(errorMessage) {
+    asyncFailed(errorMessage) {
         // TODO
         this.errorMessage = errorMessage
     }

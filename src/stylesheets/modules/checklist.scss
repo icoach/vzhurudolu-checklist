@@ -1,0 +1,47 @@
+//
+// Module: Checklist
+// -----------------------
+
+.checklist__group {
+	margin-bottom: 1.25rem; 
+}
+
+.checklist-action__remove {
+	float: right;	
+	font-style: normal;
+	font-weight: 600;
+	opacity: .6; 
+
+	&:hover {
+		opacity: 1;
+		cursor: pointer; 
+	}
+}
+
+.checklist__group ul {
+	list-style: none;
+	padding: 0;  	
+}
+
+// Component ItemForm
+// -------------------
+
+.checklist-form {
+	text-align: center;
+}
+
+.checklist-field {
+	width: 60%;
+}
+
+// Component Item
+// --------------------
+
+.checklist__item {
+	cursor: pointer;
+}
+
+.checklist__item--complete > span {
+	text-decoration: line-through; 
+	opacity: .6; 
+}

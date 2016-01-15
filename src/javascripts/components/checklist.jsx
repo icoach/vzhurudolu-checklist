@@ -5,7 +5,6 @@
 var React = require('react')
 var checklistActions = require('../actions/checklistActions')
 var checklistStore = require('../store/checklistStore')
-var NewItemForm = require('./newItemForm.jsx')
 var List = require('./list.jsx')
 
 
@@ -17,8 +16,8 @@ var Checklist = React.createClass({
         };
     },
     componentDidMount: function() {
-        var id = "23xyz" // ID should be retrieved from URL
-        checklistStore.fetchChecklist(id) // method is automagically binded by checklistStore.registerAsync()
+        var id = "abs34xay23" // ID should be retrieved from URL
+        checklistActions.fetchChecklist(id) // method is automagically binded by checklistStore.registerAsync()
         checklistStore.listen(this.onChange)
     },
     componentWillUnmount: function() {
@@ -57,7 +56,7 @@ var Checklist = React.createClass({
 
         return (
             <div className='checklist'>
-                <NewItemForm />
+                <h1>Můj webový checklist</h1>
                 {groups}
             </div>
         )
