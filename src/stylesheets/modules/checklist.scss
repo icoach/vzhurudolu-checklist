@@ -3,31 +3,47 @@
 // -----------------------
 
 .checklist__group {
-	margin-bottom: 1.25rem; 
+	margin-bottom: 1.25rem;
 }
 
-.checklist-action__remove {
-	float: right;	
-	font-style: normal;
-	font-weight: 600;
-	opacity: .6; 
+.checklist__item .checklist-action__remove {
+	opacity: 0;
+}
 
-	&:hover {
-		opacity: 1;
-		cursor: pointer; 
+.checklist__item:hover {
+	.checklist-action__remove {
+		float: right;
+		font-style: normal;
+		font-weight: 600;
+		opacity: .6;
+
+		&:hover {
+			opacity: 1;
+			cursor: pointer;
+		}
 	}
 }
 
+
 .checklist__group ul {
 	list-style: none;
-	padding: 0;  	
+	padding: 0;
 }
 
 // Component ItemForm
 // -------------------
 
 .checklist-form {
-	text-align: center;
+	padding-left: 1.25rem;
+
+	> a {
+		opacity: .6;
+		cursor: pointer;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
 }
 
 .checklist-field {
@@ -42,6 +58,10 @@
 }
 
 .checklist__item--complete > span {
-	text-decoration: line-through; 
-	opacity: .6; 
+	text-decoration: line-through;
+	opacity: .6;
+}
+
+.checklist .hide {
+  display: none;
 }

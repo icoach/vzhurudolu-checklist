@@ -1232,7 +1232,7 @@ function mixin(obj) {
 Emitter.prototype.on =
 Emitter.prototype.addEventListener = function(event, fn){
   this._callbacks = this._callbacks || {};
-  (this._callbacks[event] = this._callbacks[event] || [])
+  (this._callbacks['$' + event] = this._callbacks['$' + event] || [])
     .push(fn);
   return this;
 };
@@ -1248,11 +1248,8 @@ Emitter.prototype.addEventListener = function(event, fn){
  */
 
 Emitter.prototype.once = function(event, fn){
-  var self = this;
-  this._callbacks = this._callbacks || {};
-
   function on() {
-    self.off(event, on);
+    this.off(event, on);
     fn.apply(this, arguments);
   }
 
@@ -1284,12 +1281,12 @@ Emitter.prototype.removeEventListener = function(event, fn){
   }
 
   // specific event
-  var callbacks = this._callbacks[event];
+  var callbacks = this._callbacks['$' + event];
   if (!callbacks) return this;
 
   // remove all handlers
   if (1 == arguments.length) {
-    delete this._callbacks[event];
+    delete this._callbacks['$' + event];
     return this;
   }
 
@@ -1316,7 +1313,7 @@ Emitter.prototype.removeEventListener = function(event, fn){
 Emitter.prototype.emit = function(event){
   this._callbacks = this._callbacks || {};
   var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks[event];
+    , callbacks = this._callbacks['$' + event];
 
   if (callbacks) {
     callbacks = callbacks.slice(0);
@@ -1338,7 +1335,7 @@ Emitter.prototype.emit = function(event){
 
 Emitter.prototype.listeners = function(event){
   this._callbacks = this._callbacks || {};
-  return this._callbacks[event] || [];
+  return this._callbacks['$' + event] || [];
 };
 
 /**
@@ -21524,26 +21521,15 @@ Request.prototype.field = function(name, val){
 
 Request.prototype.attach = function(field, file, filename){
   if (!this._formData) this._formData = new root.FormData();
-  this._formData.append(field, file, filename);
+  this._formData.append(field, file, filename || file.name);
   return this;
 };
 
 /**
- * Send `data`, defaulting the `.type()` to "json" when
+ * Send `data` as the request body, defaulting the `.type()` to "json" when
  * an object is given.
  *
  * Examples:
- *
- *       // querystring
- *       request.get('/search')
- *         .end(callback)
- *
- *       // multiple data "writes"
- *       request.get('/search')
- *         .send({ search: 'query' })
- *         .send({ range: '1..5' })
- *         .send({ order: 'desc' })
- *         .end(callback)
  *
  *       // manual json
  *       request.post('/user')
@@ -21709,6 +21695,7 @@ Request.prototype.end = function(fn){
     if (e.total > 0) {
       e.percent = e.loaded / e.total * 100;
     }
+    e.direction = 'download';
     self.emit('progress', e);
   };
   if (this.hasListeners('progress')) {
@@ -21870,8 +21857,8 @@ function del(url, fn){
   return req;
 };
 
-request.del = del;
-request.delete = del;
+request['del'] = del;
+request['delete'] = del;
 
 /**
  * PATCH `url` with optional `data` and callback `fn(res)`.
@@ -21990,42 +21977,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 // Require
 
-var alt = require('../alt');
 var API = require('superagent');
+var alt = require('../alt');
+var config = require('../config');
 
 // Class definition
 
 var ChecklistActions = function () {
-    function ChecklistActions() {
-        _classCallCheck(this, ChecklistActions);
+  function ChecklistActions() {
+    _classCallCheck(this, ChecklistActions);
 
-        this.generateActions('toggleItem', 'addItem', 'removeItem', 'asyncFailed', 'asyncProgress');
+    this.generateActions('toggleItem', 'removeItem', 'updateItem', 'updateLabel', 'updateTitle', 'requestProgress', 'requestError');
+    this.checklistId = null;
+  }
+
+  _createClass(ChecklistActions, [{
+    key: 'addItem',
+    value: function addItem(item) {
+      var self = this;
+
+      return function (dispatch, alt) {
+        API.post(config.APIpath + self.checklistId + '/items').set('Content-Type', 'application/json').send(item).end(function (err, res) {
+          // TEMP: dočasné řešení ID
+          // debugger
+
+          if (err) {
+            self.requestError(err);
+          } else {
+            dispatch(res.body);
+          }
+        });
+      };
     }
+  }, {
+    key: 'fetchChecklist',
+    value: function fetchChecklist(id) {
+      var self = this;
+      this.checklistId = id;
 
-    // Promise doesn't trigger generated action, has to explicit
+      return function (dispatch, alt) {
+        // debugger
+        API.get(config.APIpath + id).end(function (err, res) {
+          if (err) {
+            self.requestError(err);
+          } else {
+            dispatch(res.body);
+          }
+        });
+      };
+    }
+  }]);
 
-    _createClass(ChecklistActions, [{
-        key: 'fetchChecklist',
-        value: function fetchChecklist(id) {
-            return function (dispatch) {
-                API.get('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/' + id).end(function (err, res) {
-                    dispatch(res.body);
-                });
-            };
-        }
-    }, {
-        key: 'asyncSuccess',
-        value: function asyncSuccess() {
-            return true;
-        }
-    }]);
-
-    return ChecklistActions;
+  return ChecklistActions;
 }();
 
 module.exports = alt.createActions(ChecklistActions);
 
-},{"../alt":176,"superagent":173}],176:[function(require,module,exports){
+},{"../alt":176,"../config":182,"superagent":173}],176:[function(require,module,exports){
 'use strict';
 
 //
@@ -22048,6 +22056,7 @@ var React = require('react');
 var checklistActions = require('../actions/checklistActions');
 var checklistStore = require('../store/checklistStore');
 var List = require('./list.jsx');
+var Title = require('./title.jsx');
 
 var Checklist = React.createClass({
     displayName: 'Checklist',
@@ -22055,11 +22064,13 @@ var Checklist = React.createClass({
     getInitialState: function getInitialState() {
         return {
             groups: checklistStore.getState().groups,
-            items: checklistStore.getState().items
+            items: checklistStore.getState().items,
+            title: checklistStore.getState().title,
+            errorMessage: checklistStore.getState().errorMessage
         };
     },
     componentDidMount: function componentDidMount() {
-        var id = "abs34xay23"; // ID should be retrieved from URL
+        var id = "2341345"; // ID should be retrieved from URL
         checklistActions.fetchChecklist(id); // method is automagically binded by checklistStore.registerAsync()
         checklistStore.listen(this.onChange);
     },
@@ -22071,13 +22082,6 @@ var Checklist = React.createClass({
     },
 
     render: function render() {
-        if (this.state.errorMessage) {
-            return React.createElement(
-                'div',
-                null,
-                this.state.errorMessage
-            );
-        }
 
         var groups = [];
         var data = this.state.groups;
@@ -22102,10 +22106,11 @@ var Checklist = React.createClass({
             'div',
             { className: 'checklist' },
             React.createElement(
-                'h1',
+                'span',
                 null,
-                'Můj webový checklist'
+                this.state.errorMessage
             ),
+            React.createElement(Title, { text: this.state.title }),
             groups
         );
     }
@@ -22113,7 +22118,7 @@ var Checklist = React.createClass({
 
 module.exports = Checklist;
 
-},{"../actions/checklistActions":175,"../store/checklistStore":182,"./list.jsx":180,"react":171}],178:[function(require,module,exports){
+},{"../actions/checklistActions":175,"../store/checklistStore":184,"./list.jsx":180,"./title.jsx":181,"react":171}],178:[function(require,module,exports){
 'use strict';
 
 //
@@ -22125,49 +22130,107 @@ var checklistActions = require('../actions/checklistActions');
 var checklistStore = require('../store/checklistStore');
 
 var Item = React.createClass({
-    displayName: 'Item',
+  displayName: 'Item',
 
-    handleToggleClick: function handleToggleClick() {
-        checklistActions.toggleItem(this.props.item_id);
-    },
-    handleRemoveClick: function handleRemoveClick() {
-        checklistActions.removeItem(this.props.item_id);
-    },
+  getInitialState: function getInitialState() {
+    return { editing: false };
+  },
 
-    render: function render() {
-        var status = this.props.done ? 'checklist__item--complete' : 'checklist__item';
-
-        if (this.props.desc) {
-            var desc = React.createElement('span', { dangerouslySetInnerHTML: { __html: "(" + this.props.desc + ")" } });
-        }
-
-        return React.createElement(
-            'li',
-            { className: status },
-            React.createElement('input', { className: 'checklist-item_trigger', type: 'checkbox', checked: this.props.done, onChange: this.handleToggleClick }),
-            React.createElement(
-                'span',
-                { className: 'checklist-item__label' },
-                this.props.label,
-                ' '
-            ),
-            React.createElement(
-                'span',
-                { className: 'checklist-item__desc' },
-                desc
-            ),
-            React.createElement(
-                'i',
-                { className: 'checklist-action__remove', onClick: this.handleRemoveClick },
-                '×'
-            )
-        );
+  handleToggleClick: function handleToggleClick() {
+    checklistActions.toggleItem(this.props.item_id);
+  },
+  handleRemoveClick: function handleRemoveClick() {
+    checklistActions.removeItem(this.props.item_id);
+  },
+  handleEdit: function handleEdit() {
+    this.setState({ editing: true });
+  },
+  handleOnKeyUp: function handleOnKeyUp(event) {
+    if (event.keyCode === 13) {
+      this.saveTitle(event);
+    } else if (event.keyCode === 27) {
+      this.stopEditing();
     }
+  },
+
+  handleSave: function handleSave(event) {
+    if (this.state.editing) {
+      var item = this.props;
+      var label = event.target.value.trim();
+
+      if (label.length && label !== item.label) {
+        checklistActions.updateLabel(item.item_id, label);
+      }
+
+      this.stopEditing();
+    }
+  },
+
+  stopEditing: function stopEditing() {
+    this.setState({ editing: false });
+  },
+
+  renderInput: function renderInput(item) {
+    return React.createElement('input', {
+      autoComplete: 'off',
+      autoFocus: true,
+      className: '',
+      defaultValue: item.label,
+      maxLength: '128',
+      onBlur: this.handleSave,
+      onKeyUp: this.handleOnKeyUp,
+      ref: 'label_input',
+      type: 'text' });
+  },
+
+  renderItem: function renderItem(item) {
+    if (item.desc) {
+      var desc = React.createElement('span', { dangerouslySetInnerHTML: { __html: "(" + item.desc + ")" } });
+    }
+
+    return React.createElement(
+      'div',
+      null,
+      React.createElement('input', { className: 'checklist-item_trigger', type: 'checkbox', checked: this.props.done, onChange: this.handleToggleClick }),
+      React.createElement(
+        'span',
+        { className: 'checklist-item__label', onClick: this.handleEdit },
+        this.props.label,
+        ' '
+      ),
+      React.createElement(
+        'span',
+        { className: 'checklist-item__desc' },
+        desc
+      )
+    );
+  },
+
+  render: function render() {
+    var status = this.props.done ? 'checklist__item checklist__item--complete' : 'checklist__item';
+    var editing = this.state.editing;
+
+    return React.createElement(
+      'li',
+      { className: status },
+      this.state.editing ? this.renderInput(this.props) : this.renderItem(this.props),
+      React.createElement(
+        'i',
+        { className: editing ? 'hide' : '', onClick: this.handleEdit },
+        'Edit'
+      ),
+      React.createElement(
+        'i',
+        { className: 'checklist-action__remove', onClick: this.handleRemoveClick },
+        '×'
+      )
+    );
+  }
 });
 
 module.exports = Item;
 
-},{"../actions/checklistActions":175,"../store/checklistStore":182,"react":171}],179:[function(require,module,exports){
+},{"../actions/checklistActions":175,"../store/checklistStore":184,"react":171}],179:[function(require,module,exports){
 'use strict';
 
 //
@@ -22189,7 +22252,7 @@ var ItemForm = React.createClass({
         e.preventDefault();
         var input_node = this.refs.item_label;
         if (input_node.value) {
-            var item = { id: Date.now(), label: input_node.value, group_id: this.props.groupId, desc: '', done: false };
+            var item = { label: input_node.value, group_id: this.props.groupId, desc: '', done: false };
             checklistActions.addItem(item);
             input_node.value = '';
         }
@@ -22212,9 +22275,13 @@ var ItemForm = React.createClass({
             'div',
             { className: 'checklist-form' },
             React.createElement(
-                'button',
+                'a',
                 { className: showButton, onClick: this.handleToggleForm, ref: 'toggle_button' },
-                '+ Přidat položku'
+                React.createElement(
+                    'i',
+                    null,
+                    '+ Přidat položku'
+                )
             ),
             React.createElement(
                 'form',
@@ -22229,7 +22296,7 @@ var ItemForm = React.createClass({
 
 module.exports = ItemForm;
 
-},{"../actions/checklistActions":175,"../store/checklistStore":182,"react":171}],180:[function(require,module,exports){
+},{"../actions/checklistActions":175,"../store/checklistStore":184,"react":171}],180:[function(require,module,exports){
 'use strict';
 
 //
@@ -22281,6 +22348,94 @@ module.exports = List;
 'use strict';
 
 //
+// Component: Editable field
+// --------------------
+
+var React = require('react');
+var checklistActions = require('../actions/checklistActions');
+
+var Title = React.createClass({
+  displayName: 'Title',
+
+  getInitialState: function getInitialState() {
+    return { editing: false };
+  },
+
+  // Event Handlers
+  handleEdit: function handleEdit() {
+    this.setState({ editing: true });
+  },
+  handleOnKeyUp: function handleOnKeyUp(event) {
+    if (event.keyCode === 13) {
+      this.saveTitle(event);
+    } else if (event.keyCode === 27) {
+      this.stopEditing();
+    }
+  },
+  handleSave: function handleSave(event) {
+    if (this.state.editing) {
+      var title = this.props;
+      var text = event.target.value.trim();
+
+      if (text.length && text !== title.text) {
+        checklistActions.updateTitle(text);
+      }
+
+      this.stopEditing();
+    }
+  },
+
+  stopEditing: function stopEditing() {
+    this.setState({ editing: false });
+  },
+
+  renderInput: function renderInput(title) {
+    return React.createElement('input', {
+      autoComplete: 'off',
+      autoFocus: true,
+      className: '',
+      defaultValue: title.text,
+      maxLength: '128',
+      onBlur: this.handleSave,
+      onKeyUp: this.handleOnKeyUp,
+      ref: 'title_input',
+      type: 'text' });
+  },
+
+  renderTitle: function renderTitle(title) {
+    return React.createElement(
+      'h1',
+      { onClick: this.handleEdit },
+      title.text
+    );
+  },
+
+  render: function render() {
+    return React.createElement(
+      'div',
+      { className: 'checklist__title' },
+      this.state.editing ? this.renderInput(this.props) : this.renderTitle(this.props)
+    );
+  }
+});
+
+module.exports = Title;
+
+},{"../actions/checklistActions":175,"react":171}],182:[function(require,module,exports){
+'use strict';
+
+// Configuration file for Checklist App
+
+var config = {
+  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
+};
+
+module.exports = config;
+
+},{}],183:[function(require,module,exports){
+'use strict';
+
+//
 // Checklist App
 //
 // @author: Martin Staněk (github: @icoach)
@@ -22292,7 +22447,7 @@ var Checklist = require('./components/checklist.jsx');
 
 ReactDOM.render(React.createElement(Checklist), document.querySelector('#app'));
 
-},{"./components/checklist.jsx":177,"react":171,"react-dom":42}],182:[function(require,module,exports){
+},{"./components/checklist.jsx":177,"react":171,"react-dom":42}],184:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22305,10 +22460,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 // Require
 
-var alt = require('../alt');
-var checklistActions = require('../actions/checklistActions');
-// var checklistSource = require('../source/checklistSource')
 var API = require('superagent');
+var checklistActions = require('../actions/checklistActions');
+var alt = require('../alt');
+var config = require('../config');
 
 // Class definition
 
@@ -22320,39 +22475,82 @@ var ChecklistStore = function () {
         this.loading = false;
         this.items = {}; // We must be able to push key => value, array is not enough
         this.groups = {};
+        this.title = null;
+        this.checklistId = null;
 
         this.bindActions(checklistActions);
-
-        // this.registerAsync(checklistSource)
     }
 
     _createClass(ChecklistStore, [{
         key: 'addItem',
         value: function addItem(item) {
+            // debugger
             this.items[item.id] = item;
 
-            API.post('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items').send(JSON.stringify(item)).end(function (err, res) {});
+            // var self = this
+
+            // API.post(checklistActions.APIpath + '2341345/items')
+            // .send(JSON.stringify(item))
+            // .end(function(err, res){
+            //   // TEMP: dočasné řešení ID
+            //   var item = res.body
+            //   self.items[item.id] = item
+            //   resolve()
+            //   // TODO: pokud to vrátí nějaký error, je třeba zobrazit v rozhraní
+            // })
         }
     }, {
         key: 'toggleItem',
         value: function toggleItem(id) {
             this.items[id].done = !this.items[id].done;
 
-            API.post('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items').send(JSON.stringify(this.items[id])).end(function (err, res) {});
+            API.put(config.APIpath + this.checklistId + '/items/' + id).set('Content-Type', 'application/json').send(this.items[id]).end(function (err, res) {
+                // TODO: pokud to vrátí nějaký error, je třeba zobrazit v rozhraní
+            });
+        }
+    }, {
+        key: 'updateLabel',
+        value: function updateLabel(data) {
+            var id = data[0];
+            var label = data[1];
+
+            // TODO: jak se správně řeší předávání data přes akce
+            this.items[id].label = label;
+
+            API.put(config.APIpath + this.checklistId + '/items/' + id).set('Content-Type', 'application/json').send(this.items[id]).end(function (err, res) {
+                // TODO: pokud to vrátí nějaký error, je třeba zobrazit v rozhraní
+            });
+        }
+    }, {
+        key: 'updateTitle',
+        value: function updateTitle(title) {
+            this.title = title;
+            var data = { name: title };
+            // TODO: jak se správně řeší předávání data přes akce
+
+            API.put(config.APIpath + this.checklistId).set('Content-Type', 'application/json').send(data).end(function (err, res) {
+                // TODO: pokud to vrátí nějaký error, je třeba zobrazit v rozhraní
+            });
         }
     }, {
         key: 'removeItem',
         value: function removeItem(id) {
             delete this.items[id];
 
-            API.del('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/abs34xay23/items/' + id).end(function (err, res) {});
+            API.del(config.APIpath + this.checklistId + '/items/' + id).end(function (err, res) {
+                // TODO: pokud to vrátí nějaký error, je třeba zobrazit v rozhraní
+            });
         }
     }, {
         key: 'fetchChecklist',
         value: function fetchChecklist(data) {
             this.loading = false;
             var name = data.name; // Checklist title
+            var id = data.id; // Checklist ID
             var groups = data.groups;
+
+            this.title = name;
+            this.checklistId = id;
 
             // Push fetched items to the state
             for (var key in groups) {
@@ -22370,7 +22568,6 @@ var ChecklistStore = function () {
     }, {
         key: 'asyncSuccess',
         value: function asyncSuccess() {
-            debugger;
             this.loading = false;
         }
     }, {
@@ -22379,10 +22576,10 @@ var ChecklistStore = function () {
             this.loading = true;
         }
     }, {
-        key: 'asyncFailed',
-        value: function asyncFailed(errorMessage) {
+        key: 'requestError',
+        value: function requestError(error) {
             // TODO
-            this.errorMessage = errorMessage;
+            this.errorMessage = error.message;
         }
     }]);
 
@@ -22391,4 +22588,4 @@ var ChecklistStore = function () {
 
 module.exports = alt.createStore(ChecklistStore);
 
-},{"../actions/checklistActions":175,"../alt":176,"superagent":173}]},{},[181]);
+},{"../actions/checklistActions":175,"../alt":176,"../config":182,"superagent":173}]},{},[183]);

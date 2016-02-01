@@ -2,14 +2,18 @@
   margin-bottom: 1.25rem;
 }
 
-.checklist-action__remove {
+.checklist__item .checklist-action__remove {
+  opacity: 0;
+}
+
+.checklist__item:hover .checklist-action__remove {
   float: right;
   font-style: normal;
   font-weight: 600;
   opacity: .6;
 }
 
-.checklist-action__remove:hover {
+.checklist__item:hover .checklist-action__remove:hover {
   opacity: 1;
   cursor: pointer;
 }
@@ -20,7 +24,16 @@
 }
 
 .checklist-form {
-  text-align: center;
+  padding-left: 1.25rem;
+}
+
+.checklist-form > a {
+  opacity: .6;
+  cursor: pointer;
+}
+
+.checklist-form > a:hover {
+  opacity: 1;
 }
 
 .checklist-field {
@@ -34,6 +47,10 @@
 .checklist__item--complete > span {
   text-decoration: line-through;
   opacity: .6;
+}
+
+.checklist .hide {
+  display: none;
 }
 
 /*# sourceMappingURL=checklist.css.map */

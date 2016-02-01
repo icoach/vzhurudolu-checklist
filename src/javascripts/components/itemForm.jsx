@@ -15,7 +15,7 @@ var ItemForm = React.createClass({
         e.preventDefault();
         var input_node = this.refs.item_label
         if (input_node.value) {
-            var item = { id: Date.now(), label: input_node.value, group_id: this.props.groupId, desc: '', done: false }
+            var item = { label: input_node.value, group_id: this.props.groupId, desc: '', done: false }
             checklistActions.addItem(item)
             input_node.value = ''
         }
@@ -30,13 +30,13 @@ var ItemForm = React.createClass({
     },
 
     render: function() {
-        var id = 'add_item_' + Date.now() // Unique ID for form elements 
+        var id = 'add_item_' + Date.now() // Unique ID for form elements
         var showForm = (!this.state.showForm) ? 'hide' : ''
         var showButton = (this.state.showForm) ? 'hide' : ''
 
         return (
             <div className='checklist-form'>
-                <button className={showButton} onClick={this.handleToggleForm} ref='toggle_button'>+ Přidat položku</button>
+                <a className={showButton} onClick={this.handleToggleForm} ref='toggle_button'><i>+ Přidat položku</i></a>
                 <form className={showForm} onSubmit={this.handleSubmit}>
                     <input className='checklist-field' id={id} placeholder="Co ještě musím zkontrolovat..." type='text' ref='item_label' />
                     &nbsp;<input type='submit' value='Přidat' ref='add_button' />

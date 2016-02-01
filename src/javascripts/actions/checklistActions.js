@@ -4,35 +4,66 @@
 
 // Require
 
-var alt = require('../alt');
 var API = require('superagent')
+var alt = require('../alt');
+var config = require('../config');
 
 // Class definition
 
 class ChecklistActions {
-    constructor() {
-        this.generateActions(
-            'toggleItem',
-            'addItem',
-            'removeItem',
-            'asyncFailed',
-            'asyncProgress'
-        )
-    }
+  constructor() {
+      this.generateActions(
+          'toggleItem',
+          'removeItem',
+          'updateItem',
+          'updateLabel',
+          'updateTitle',
+          'requestProgress',
+          'requestError'
+      )
+      this.checklistId = null
+  }
 
-    // Promise doesn't trigger generated action, has to explicit
-    fetchChecklist(id) {
-        return function(dispatch) {
-            API.get('http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/' + id)
-            .end(function(err, res){
-                dispatch(res.body)
-            });
-        }
+  addItem(item) {
+    var self = this
+
+    return function(dispatch, alt) {
+      API.post(config.APIpath + self.checklistId + '/items')
+        .set('Content-Type', 'application/json')
+        .send(item)
+        .end(function(err, res){
+          // TEMP: dočasné řešení ID
+          // debugger
+
+          if (err) {
+            self.requestError(err)
+          }
+          else {
+            dispatch(res.body)
+          }
+        })
+    }
+  }
+
+
+  fetchChecklist(id) {
+      var self = this
+      this.checklistId = id
+
+      return function(dispatch, alt) {
+        // debugger
+          API.get(config.APIpath + id)
+          .end(function(err, res){
+            if (err) {
+              self.requestError(err)
+            }
+            else {
+              dispatch(res.body)
+            }
+          })
+      }
 	}
 
-    asyncSuccess() {
-        return true
-    }
 
 }
 
