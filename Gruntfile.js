@@ -20,8 +20,8 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['clean', 'copy', 'dist-css', 'dist-js']);
 
   // JS tasks
-  grunt.registerTask('dist-js', ['neuter', 'uglify', 'compress']);
-  grunt.registerTask('dev-js', ['neuter', 'jshint']);
+  grunt.registerTask('dist-js', ['browserify', 'uglify']);
+  grunt.registerTask('dev-js', ['browserify', 'jshint']);
 
   // CSS tasks
   grunt.registerTask('dist-css', ['sass']);

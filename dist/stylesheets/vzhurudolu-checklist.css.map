@@ -1,6 +1,6 @@
 {
 	"version": 3,
-	"file": "checklist.css",
+	"file": "vzhurudolu-checklist.css",
 	"sources": [
 		"../../src/stylesheets/index.scss",
 		"../../src/stylesheets/modules/checklist.scss"

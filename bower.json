@@ -1,5 +1,5 @@
 {
-  "name": "checklist",
+  "name": "vzhurudolu-checklist",
   "description": "Checklist for webdesigners",
   "version": "0.1.0",
   "keywords": [
@@ -7,7 +7,8 @@
     "front-end"
   ],
   "main": [
-    "./dist/stylesheets/checklist.css"
+    "./dist/stylesheets/checklist.min.css",
+    "./dist/javascripts/checklist.min.js"
   ],
   "ignore": [
     "log",
@@ -16,8 +17,6 @@
     ".editorconfig",
     ".gitignore"
   ],
-  "dependencies": {
-    "jquery": "2.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {}
 }

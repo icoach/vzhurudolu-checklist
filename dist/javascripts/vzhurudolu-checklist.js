@@ -22445,7 +22445,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Checklist = require('./components/checklist.jsx');
 
-ReactDOM.render(React.createElement(Checklist), document.querySelector('#app'));
+ReactDOM.render(React.createElement(Checklist), document.querySelector('#vd-checklist-app'));
 
 },{"./components/checklist.jsx":177,"react":171,"react-dom":42}],184:[function(require,module,exports){
 'use strict';
