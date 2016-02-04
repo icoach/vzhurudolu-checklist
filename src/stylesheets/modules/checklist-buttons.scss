@@ -1,0 +1,37 @@
+//
+// Checklist Action buttons
+//-------------------------------------
+
+.checklist-item__button {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  margin-left: 5px;
+  outline: none;
+  border: 0;
+  border-radius: 100px;
+  padding: 3px 0 0 0;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  background: $checklist-button-bg;
+
+  &:first-child {
+    margin: 0;
+  }
+}
+
+// .icon {
+//   fill: #555;
+//   transform: translate(0, 0);
+
+//   .checklist-item__button:hover & {
+//     fill: #999;
+//   }
+// }
+
+// .icon--active {
+//   &, .checklist-item__button:hover & {
+//     fill: #85bf6b;
+//   }
+// }

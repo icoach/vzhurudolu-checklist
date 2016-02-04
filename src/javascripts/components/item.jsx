@@ -5,28 +5,43 @@
 var React = require('react')
 var checklistActions = require('../actions/checklistActions')
 var checklistStore = require('../store/checklistStore')
+var classNames = require('classnames')
 
 var Item = React.createClass({
     getInitialState: function() {
-        return { editing: false }
+        return { editing: false, showInfo: false }
     },
 
-    handleToggleClick: function() {
+    handleToggle: function() {
         checklistActions.toggleItem(this.props.item_id)
 
     },
-    handleRemoveClick: function() {
+    handleRemove: function() {
         checklistActions.removeItem(this.props.item_id)
     },
     handleEdit: function() {
+      if (!this.state.editing) {
         this.setState({editing: true})
+      }
+      else {
+        this.setState({editing: false})
+      }
     },
     handleOnKeyUp: function(event) {
       if (event.keyCode === 13) {
-        this.saveTitle(event)
+        this.handleSave(event)
       }
       else if (event.keyCode === 27) {
         this.stopEditing()
+      }
+    },
+
+    handleInfo: function() {
+      if (!this.state.showInfo) {
+        this.setState({showInfo: true})
+      }
+      else {
+        this.setState({showInfo: false})
       }
     },
 
@@ -64,31 +79,54 @@ var Item = React.createClass({
     },
 
     renderItem: function(item) {
-      if (item.desc) {
-          var desc = <span dangerouslySetInnerHTML={{ __html: "(" + item.desc + ")" }} />
-      }
-
       return (
-        <div>
-        <input className='checklist-item_trigger' type='checkbox' checked={this.props.done} onChange={this.handleToggleClick} />
-        <span className='checklist-item__label' onClick={this.handleEdit}>{this.props.label} </span>
-        <span className='checklist-item__desc'>
-            {desc}
-        </span>
-        </div>
+        <span>{item.label}</span>
+      )
+    },
+
+    renderInfo: function(desc) {
+      var description = <span dangerouslySetInnerHTML={{ __html: "(" + desc + ")" }} />
+      return (
+        <div className='checklist-item__desc'>{description}</div>
       )
     },
 
     render: function() {
-        var status = (this.props.done) ? 'checklist__item checklist__item--complete' : 'checklist__item'
         var editing = this.state.editing
 
-        return (
-            <li className={status}>
-              {this.state.editing ? this.renderInput(this.props) : this.renderItem(this.props)}
+        if (this.props.desc) {
+          var desc = <span dangerouslySetInnerHTML={{ __html: "(" + this.props.desc + ")" }} />
+        }
 
-              <i className={editing ? 'hide' : ''} onClick={this.handleEdit}>Edit</i>
-              <i className='checklist-action__remove' onClick={this.handleRemoveClick}>&times;</i>
+        var itemClasses = classNames({
+          'checklist-item': true,
+          'checklist-item--complete': this.props.done,
+          'checklist-item--editing': this.state.editing
+        })
+
+        var descButtonClasses = classNames({
+          'hide': !this.props.desc,
+          'checklist-item__button': true
+        })
+
+        return (
+            <li className={itemClasses}>
+
+              <div className='cell checklist-item__toggle'>
+                <button className='checklist-item__button' onClick={this.handleToggle} aria-hidden="false" aria-label="Mark task as completed" type="button">O</button>
+              </div>
+
+              <div className='cell checklist-item__label'>
+                {this.state.editing ? this.renderInput(this.props) : this.renderItem(this.props)}
+                {this.state.showInfo && this.props.desc ? this.renderInfo(this.props.desc) : ''}
+              </div>
+
+              <div className='cell checklist-item__actions'>
+                <button onClick={this.handleInfo} aria-hidden="false" aria-label="More information" className={descButtonClasses} type="button">I</button>
+                <button onClick={this.handleEdit} aria-hidden="false" aria-label="Edit task" className="checklist-item__button" type="button">E</button>
+                <button onClick={this.handleRemove} aria-hidden="false" aria-label="Delete task" className="checklist-item__button" type="button">D</button>
+              </div>
+
             </li>
         )
     }

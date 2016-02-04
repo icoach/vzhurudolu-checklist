@@ -16,7 +16,7 @@ var Title = React.createClass({
     },
     handleOnKeyUp: function(event) {
       if (event.keyCode === 13) {
-        this.saveTitle(event)
+        this.handleSave(event)
       }
       else if (event.keyCode === 27) {
         this.stopEditing()
@@ -57,7 +57,7 @@ var Title = React.createClass({
 
     renderTitle: function(title) {
       return (
-        <h1 onClick={this.handleEdit}>{title.text}</h1>
+        <h1 onClick={this.handleEdit}><span className='text-editable'>{title.text}</span></h1>
       )
     },
 

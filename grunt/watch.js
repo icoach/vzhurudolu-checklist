@@ -1,4 +1,4 @@
-// 
+//
 // GRUNT TASK: Watch
 // Watch for changes in styles and javascript and compile them on-the-fly
 // -----------------
@@ -9,7 +9,7 @@ module.exports = {
   },
   styles: {
     files: ['src/stylesheets/**/*'],
-    tasks: ['sass']
+    tasks: ['sass', 'postcss']
   },
   js: {
     files: 'src/javascripts/**/*',

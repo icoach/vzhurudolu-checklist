@@ -14,7 +14,7 @@ var config = require('../config')
 class ChecklistStore {
     constructor() {
         this.errorMessage = null
-        this.loading = false
+        this.loaded = false
         this.items = {} // We must be able to push key => value, array is not enough
         this.groups = {}
         this.title = null
@@ -89,7 +89,7 @@ class ChecklistStore {
     }
 
     fetchChecklist(data) {
-        this.loading = false
+        this.loaded = true
         var name = data.name // Checklist title
         var id = data.id // Checklist ID
         var groups = data.groups
@@ -111,12 +111,12 @@ class ChecklistStore {
         }
     }
 
-    asyncSuccess() {
-        this.loading = false
+    requestSuccess() {
+        this.loaded = true
     }
 
-    asyncProgress() {
-        this.loading = true
+    requestProgress() {
+        this.loaded = false
     }
     requestError(error) {
         // TODO

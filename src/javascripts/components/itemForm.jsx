@@ -38,7 +38,7 @@ var ItemForm = React.createClass({
             <div className='checklist-form'>
                 <a className={showButton} onClick={this.handleToggleForm} ref='toggle_button'><i>+ Přidat položku</i></a>
                 <form className={showForm} onSubmit={this.handleSubmit}>
-                    <input className='checklist-field' id={id} placeholder="Co ještě musím zkontrolovat..." type='text' ref='item_label' />
+                    <input className='checklist-form__field' id={id} placeholder="Co ještě musím zkontrolovat..." type='text' ref='item_label' />
                     &nbsp;<input type='submit' value='Přidat' ref='add_button' />
                 </form>
             </div>

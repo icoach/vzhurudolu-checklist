@@ -5,7 +5,7 @@
 // @author: Martin Staněk (https://github.com/icoach)
 // -------------------------------
 
-$libPath: '../../vendor';
+// $libPath: '../../vendor';
 
 // CORE
 // -------------------
@@ -14,7 +14,15 @@ $libPath: '../../vendor';
 
 // MODULE DEFINITION
 // -------------------
-@import 'modules/checklist.scss';
+@import 'modules/checklist-variables';
+
+@import 'modules/checklist';
+@import 'modules/checklist-title';
+@import 'modules/checklist-group';
+@import 'modules/checklist-buttons';
+@import 'modules/checklist-item';
+@import 'modules/checklist-item-desc';
+@import 'modules/checklist-form';
 
 
 // MODULE DEPENDENCIES

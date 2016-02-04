@@ -7,7 +7,8 @@ var checklistActions = require('../actions/checklistActions')
 var checklistStore = require('../store/checklistStore')
 var List = require('./list.jsx')
 var Title = require('./title.jsx')
-
+var classNames = require('classnames')
+var Loader = require('react-loader');
 
 var Checklist = React.createClass({
     getInitialState: function() {
@@ -15,7 +16,8 @@ var Checklist = React.createClass({
             groups: checklistStore.getState().groups,
             items: checklistStore.getState().items,
             title: checklistStore.getState().title,
-            errorMessage: checklistStore.getState().errorMessage
+            errorMessage: checklistStore.getState().errorMessage,
+            loaded: checklistStore.getState().loaded
         }
     },
     componentDidMount: function() {
@@ -52,11 +54,18 @@ var Checklist = React.createClass({
             )
         }
 
+        var checklistClasses = classNames({
+          'checklist': true,
+          'checklist--loading': this.state.loaded
+        })
+
         return (
-            <div className='checklist'>
-                <span>{this.state.errorMessage}</span>
-                <Title text={this.state.title} />
-                {groups}
+            <div className={checklistClasses}>
+                <Loader loaded={this.state.loaded}>
+                  <span>{this.state.errorMessage}</span>
+                  <Title text={this.state.title} />
+                  {groups}
+                </Loader>
             </div>
         )
     }

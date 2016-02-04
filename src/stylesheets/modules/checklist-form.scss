@@ -1,0 +1,21 @@
+//
+// Component: ItemForm
+// -------------------
+
+.checklist-form {
+    padding-left: 2.8rem;
+
+    > a {
+        opacity: .6;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.checklist-form__field {
+  width: 100%;
+}
+

@@ -1,67 +1,42 @@
 //
-// Module: Checklist
-// -----------------------
+// Checklist
+// ----------------------
 
-.checklist__group {
-	margin-bottom: 1.25rem;
-}
-
-.checklist__item .checklist-action__remove {
-	opacity: 0;
-}
-
-.checklist__item:hover {
-	.checklist-action__remove {
-		float: right;
-		font-style: normal;
-		font-weight: 600;
-		opacity: .6;
-
-		&:hover {
-			opacity: 1;
-			cursor: pointer;
-		}
-	}
+.checklist {
+  position: relative;
+  min-height: 10rem;
 }
 
 
-.checklist__group ul {
-	list-style: none;
-	padding: 0;
+
+//=====================================
+//  CELLS
+//-------------------------------------
+.cell {
+  &:first-child,
+  &:last-child {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+  }
+
+  &:first-child {
+    padding-right: 20px;
+  }
+
+  &:nth-child(2) {
+    flex: 1;
+    padding: 10px 1rem 10px 0;
+    overflow: hidden;
+  }
 }
 
-// Component ItemForm
-// -------------------
 
-.checklist-form {
-	padding-left: 1.25rem;
-
-	> a {
-		opacity: .6;
-		cursor: pointer;
-
-		&:hover {
-			opacity: 1;
-		}
-	}
-}
-
-.checklist-field {
-	width: 60%;
-}
-
-// Component Item
-// --------------------
-
-.checklist__item {
-	cursor: pointer;
-}
-
-.checklist__item--complete > span {
-	text-decoration: line-through;
-	opacity: .6;
-}
+// UTILS
 
 .checklist .hide {
   display: none;
+}
+.text-editable {
+
 }
