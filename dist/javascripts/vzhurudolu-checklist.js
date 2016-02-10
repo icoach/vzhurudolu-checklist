@@ -22756,7 +22756,7 @@ var Item = React.createClass({
   renderItem: function renderItem(item) {
     return React.createElement(
       'span',
-      null,
+      { onClick: this.handleToggle },
       item.label
     );
   },

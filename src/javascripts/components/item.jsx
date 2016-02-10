@@ -80,7 +80,7 @@ var Item = React.createClass({
 
     renderItem: function(item) {
       return (
-        <span>{item.label}</span>
+        <span onClick={this.handleToggle}>{item.label}</span>
       )
     },
 
