@@ -10,9 +10,9 @@
   outline: none;
   border: 0;
   border-radius: 100px;
-  padding: 3px 0 0 0;
-  width: 40px;
-  height: 40px;
+  padding: 5px 0 0 0;
+  width: 38px;
+  height: 38px;
   overflow: hidden;
   background: $checklist-button-bg;
 
@@ -21,17 +21,25 @@
   }
 }
 
-// .icon {
-//   fill: #555;
-//   transform: translate(0, 0);
+.checklist-item__button--complete {
+  background: $checklist-button-bg-complete;
 
-//   .checklist-item__button:hover & {
-//     fill: #999;
-//   }
-// }
+  .checklist-glyph {
+    fill: #fff;
+  }
+}
 
-// .icon--active {
-//   &, .checklist-item__button:hover & {
-//     fill: #85bf6b;
-//   }
-// }
+.checklist-glyph {
+  fill: #999;
+  transform: translate(0, 0);
+
+  .checklist-item__button:hover & {
+    fill: #555;
+  }
+}
+
+.checklist-glyph--active {
+  &, .checklist-item__button:hover & {
+    fill: $checklist-complete-color;
+  }
+}
