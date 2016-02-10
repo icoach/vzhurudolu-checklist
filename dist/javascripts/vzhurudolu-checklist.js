@@ -22618,7 +22618,12 @@ var Checklist = React.createClass({
         var parser = document.createElement('a');
         parser.href = window.location.href;
 
-        var id = parser.pathname.split("/")[2].trim();
+        var id = null;
+        if (parser.href.indexOf('localhost')) {
+            id = '2341345';
+        } else {
+            id = parser.pathname.split("/")[2].trim();
+        }
         checklistActions.fetchChecklist(id); // method is automagically binded by checklistStore.registerAsync()
         checklistStore.listen(this.onChange);
     },
@@ -23048,7 +23053,8 @@ module.exports = Title;
 // Configuration file for Checklist App
 
 var config = {
-  APIpath: '/checklistapi/checklists/'
+  // APIpath: '/checklistapi/checklists/'
+  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
 };
 
 module.exports = config;
