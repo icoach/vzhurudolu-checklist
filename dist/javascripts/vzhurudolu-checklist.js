@@ -22615,7 +22615,10 @@ var Checklist = React.createClass({
         };
     },
     componentDidMount: function componentDidMount() {
-        var id = "2341345"; // ID should be retrieved from URL
+        var parser = document.createElement('a');
+        parser.href = window.location.href;
+
+        var id = parser.pathname.split("/")[2].trim(); // ID is retrieved from URL
         checklistActions.fetchChecklist(id); // method is automagically binded by checklistStore.registerAsync()
         checklistStore.listen(this.onChange);
     },
@@ -23029,7 +23032,7 @@ module.exports = Title;
 // Configuration file for Checklist App
 
 var config = {
-  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
+  APIpath: '/checklistapi/checklists/'
 };
 
 module.exports = config;
