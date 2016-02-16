@@ -22537,9 +22537,6 @@ var ChecklistActions = function () {
 
       return function (dispatch, alt) {
         API.post(config.APIpath + self.checklistId + '/items').set('Content-Type', 'application/json').send(item).end(function (err, res) {
-          // TEMP: dočasné řešení ID
-          // debugger
-
           if (err) {
             self.requestError(err);
           } else {

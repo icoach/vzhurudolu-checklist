@@ -32,9 +32,6 @@ class ChecklistActions {
         .set('Content-Type', 'application/json')
         .send(item)
         .end(function(err, res){
-          // TEMP: dočasné řešení ID
-          // debugger
-
           if (err) {
             self.requestError(err)
           }
