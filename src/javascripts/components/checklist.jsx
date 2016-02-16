@@ -26,7 +26,7 @@ var Checklist = React.createClass({
         parser.href = window.location.href
 
         var id = null
-        if (parser.href.indexOf('localhost:8888')) {
+        if (parser.href.indexOf('localhost:8888') !== false) {
           id = '2341345'
           config.APIpath = 'http://vzhurudolu.lcl/checklistapi/checklists/'
         }
