@@ -22555,10 +22555,6 @@ var ChecklistActions = function () {
       this.checklistId = id;
 
       return function (dispatch, alt) {
-        // Start loading
-        // self.requestProgress()
-        // debugger
-        // debugger
         API.get(config.APIpath + id).end(function (err, res) {
           if (err) {
             self.requestError(err);
@@ -22601,6 +22597,7 @@ var List = require('./list.jsx');
 var Title = require('./title.jsx');
 var classNames = require('classnames');
 var Loader = require('react-loader');
+var config = require('../config');
 
 var Checklist = React.createClass({
     displayName: 'Checklist',
@@ -22619,8 +22616,9 @@ var Checklist = React.createClass({
         parser.href = window.location.href;
 
         var id = null;
-        if (parser.href.indexOf('localhost')) {
+        if (parser.href.indexOf('localhost:8888')) {
             id = '2341345';
+            config.APIpath = 'http://vzhurudolu.lcl/checklistapi/checklists/';
         } else {
             id = parser.pathname.split("/")[2].trim();
         }
@@ -22680,7 +22678,7 @@ var Checklist = React.createClass({
 
 module.exports = Checklist;
 
-},{"../actions/checklistActions":178,"../store/checklistStore":187,"./list.jsx":183,"./title.jsx":184,"classnames":9,"react":173,"react-loader":44}],181:[function(require,module,exports){
+},{"../actions/checklistActions":178,"../config":185,"../store/checklistStore":187,"./list.jsx":183,"./title.jsx":184,"classnames":9,"react":173,"react-loader":44}],181:[function(require,module,exports){
 'use strict';
 
 //
@@ -23053,8 +23051,7 @@ module.exports = Title;
 // Configuration file for Checklist App
 
 var config = {
-  // APIpath: '/checklistapi/checklists/'
-  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
+  APIpath: '/checklistapi/checklists/'
 };
 
 module.exports = config;

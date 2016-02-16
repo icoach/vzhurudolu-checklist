@@ -1,8 +1,7 @@
 // Configuration file for Checklist App
 
 var config = {
-  // APIpath: '/checklistapi/checklists/'
-  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
+  APIpath: '/checklistapi/checklists/'
 }
 
 module.exports = config

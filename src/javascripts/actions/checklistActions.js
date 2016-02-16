@@ -51,10 +51,6 @@ class ChecklistActions {
       this.checklistId = id
 
       return function(dispatch, alt) {
-          // Start loading
-          // self.requestProgress()
-// debugger
-          // debugger
           API.get(config.APIpath + id)
           .end(function(err, res){
             if (err) {
