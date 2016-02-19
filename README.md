@@ -25,6 +25,8 @@ vzhurudolu-checklist/
         └── vzhurudolu-checklist.min.css
 ```
 
+Checklist se natahuje do div elementu `<div id="vd-checklist-app" data-lang="cs"></div>`. Volitelně je možné zvolit jazyk v jakém je aplikace prezentována. K dispozici jsou varianty `cs` a `en`.
+
 ### Lokální konfigurace
 
 V adresáři `src/javascripts` je soubor `configLocal.js.example`, který je třeba zkopírovat a přejmenovat na `configLocal.js`. Soubor obsahuje cestu k lokálnímu API. Bez správného nastavení cesty nebude aplikace fungovat.
