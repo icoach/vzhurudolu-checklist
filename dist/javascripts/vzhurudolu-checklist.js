@@ -22532,7 +22532,7 @@ var ChecklistActions = function () {
   function ChecklistActions() {
     _classCallCheck(this, ChecklistActions);
 
-    this.generateActions('toggleItem', 'removeItem', 'updateItem', 'updateLabel', 'updateTitle', 'requestProgress', 'requestError');
+    this.generateActions('toggleItem', 'removeItem', 'updateItem', 'updateLabel', 'updateTitle', 'requestProgress', 'requestError', 'setLanguage');
     this.checklistId = null;
   }
 
@@ -22616,10 +22616,15 @@ var Checklist = React.createClass({
         };
     },
     componentDidMount: function componentDidMount() {
+        var id = null;
+        var appItem = document.getElementById('vd-checklist-app');
         var parser = document.createElement('a');
         parser.href = window.location.href;
 
-        var id = null;
+        if (appItem.getAttribute('data-lang')) {
+            config.selectedLanguage = appItem.getAttribute('data-lang');
+        }
+
         if (parser.href.indexOf('localhost:8888') > -1) {
             id = '2341345';
             config.APIpath = configLocal.APIpath;
@@ -22627,6 +22632,7 @@ var Checklist = React.createClass({
             id = parser.pathname.split("/")[2].trim();
         }
         checklistActions.fetchChecklist(id);
+        checklistActions.setLanguage(config[config.selectedLanguage]);
         checklistStore.listen(this.onChange);
     },
     componentWillUnmount: function componentWillUnmount() {
@@ -22693,12 +22699,17 @@ var React = require('react');
 var checklistActions = require('../actions/checklistActions');
 var checklistStore = require('../store/checklistStore');
 var classNames = require('classnames');
+var config = require('../config');
 
 var Item = React.createClass({
   displayName: 'Item',
 
   getInitialState: function getInitialState() {
-    return { editing: false, showInfo: false };
+    return {
+      editing: false,
+      showInfo: false,
+      language: checklistStore.getState().language
+    };
   },
 
   handleToggle: function handleToggle() {
@@ -22775,7 +22786,7 @@ var Item = React.createClass({
       { className: 'checklist-item__desc' },
       React.createElement(
         'button',
-        { className: 'checklist-item__button checklist-item__button--close', onClick: this.handleInfo, 'aria-hidden': 'false', 'aria-label': 'Close', type: 'button' },
+        { className: 'checklist-item__button checklist-item__button--close', onClick: this.handleInfo, 'aria-hidden': 'false', 'aria-label': this.state.language.descriptionClose, type: 'button' },
         React.createElement(
           'svg',
           { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22812,7 +22823,7 @@ var Item = React.createClass({
         { className: 'cell checklist-item__toggle' },
         React.createElement(
           'button',
-          { className: classNames('checklist-item__button', { 'checklist-item__button--complete': this.props.done }), onClick: this.handleToggle, 'aria-hidden': 'false', 'aria-label': 'Mark task as completed', type: 'button' },
+          { className: classNames('checklist-item__button', { 'checklist-item__button--complete': this.props.done }), onClick: this.handleToggle, 'aria-hidden': 'false', 'aria-label': this.state.language.taskComplete, type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22831,7 +22842,7 @@ var Item = React.createClass({
         { className: 'cell checklist-item__actions' },
         React.createElement(
           'button',
-          { onClick: this.handleInfo, 'aria-hidden': 'false', 'aria-label': 'More information', className: descButtonClasses, type: 'button' },
+          { onClick: this.handleInfo, 'aria-hidden': 'false', 'aria-label': this.state.language.taskInfo, className: descButtonClasses, type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22840,7 +22851,7 @@ var Item = React.createClass({
         ),
         React.createElement(
           'button',
-          { onClick: this.handleEdit, 'aria-hidden': 'false', 'aria-label': 'Edit task', className: 'checklist-item__button', type: 'button' },
+          { onClick: this.handleEdit, 'aria-hidden': 'false', 'aria-label': this.state.language.taskEdit, className: 'checklist-item__button', type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22849,7 +22860,7 @@ var Item = React.createClass({
         ),
         React.createElement(
           'button',
-          { onClick: this.handleRemove, 'aria-hidden': 'false', 'aria-label': 'Delete task', className: 'checklist-item__button', type: 'button' },
+          { onClick: this.handleRemove, 'aria-hidden': 'false', 'aria-label': this.state.language.taskDelete, className: 'checklist-item__button', type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22863,7 +22874,7 @@ var Item = React.createClass({
 
 module.exports = Item;
 
-},{"../actions/checklistActions":178,"../store/checklistStore":188,"classnames":9,"react":173}],182:[function(require,module,exports){
+},{"../actions/checklistActions":178,"../config":185,"../store/checklistStore":188,"classnames":9,"react":173}],182:[function(require,module,exports){
 'use strict';
 
 //
@@ -22878,7 +22889,7 @@ var ItemForm = React.createClass({
     displayName: 'ItemForm',
 
     getInitialState: function getInitialState() {
-        return { showForm: false };
+        return { showForm: false, language: checklistStore.getState().language };
     },
 
     handleSubmit: function handleSubmit(e) {
@@ -22913,15 +22924,16 @@ var ItemForm = React.createClass({
                 React.createElement(
                     'i',
                     null,
-                    '+ Přidat položku'
+                    '+ ',
+                    this.state.language.addItem
                 )
             ),
             React.createElement(
                 'form',
                 { className: showForm, onSubmit: this.handleSubmit },
-                React.createElement('input', { className: 'checklist-form__field', id: id, placeholder: 'Co ještě musím zkontrolovat...', type: 'text', ref: 'item_label' }),
+                React.createElement('input', { className: 'checklist-form__field', id: id, placeholder: this.state.language.addPlaceholder, type: 'text', ref: 'item_label' }),
                 ' ',
-                React.createElement('input', { type: 'submit', value: 'Přidat', ref: 'add_button' })
+                React.createElement('input', { type: 'submit', value: this.state.language.addAction, ref: 'add_button' })
             )
         );
     }
@@ -22986,6 +22998,7 @@ module.exports = List;
 
 var React = require('react');
 var checklistActions = require('../actions/checklistActions');
+var config = require('../config');
 
 var Title = React.createClass({
   displayName: 'Title',
@@ -23058,13 +23071,36 @@ var Title = React.createClass({
 
 module.exports = Title;
 
-},{"../actions/checklistActions":178,"react":173}],185:[function(require,module,exports){
+},{"../actions/checklistActions":178,"../config":185,"react":173}],185:[function(require,module,exports){
 'use strict';
 
 // Configuration file for Checklist App
 
 var config = {
-  APIpath: '/checklistapi/checklists/'
+  APIpath: '/checklistapi/checklists/',
+
+  selectedLanguage: 'cs',
+
+  cs: {
+    taskComplete: 'Označit úkol za splněný',
+    taskInfo: 'Zobrazit informace',
+    taskEdit: 'Upravit úkol',
+    taskDelete: 'Smazat úkol',
+    descriptionClose: 'Zavřít',
+    addItem: 'Přidat položku',
+    addAction: 'Přidat',
+    addPlaceholder: 'Co ještě musím zkontrolovat'
+  },
+  en: {
+    taskComplete: 'Mark task as completed',
+    taskInfo: 'More information',
+    taskEdit: 'Edit task',
+    taskDelete: 'Delete task',
+    descriptionClose: 'Close',
+    addItem: 'Add Item',
+    addAction: 'Add',
+    addPlaceholder: 'What else has to be checked'
+  }
 };
 
 module.exports = config;
@@ -23127,6 +23163,7 @@ var ChecklistStore = function () {
         this.groups = {};
         this.title = null;
         this.checklistId = null;
+        this.language = {};
 
         this.bindActions(checklistActions);
     }
@@ -23214,6 +23251,11 @@ var ChecklistStore = function () {
                     this.items[id] = items[key_item];
                 }
             }
+        }
+    }, {
+        key: 'setLanguage',
+        value: function setLanguage(data) {
+            this.language = data;
         }
     }, {
         key: 'requestSuccess',

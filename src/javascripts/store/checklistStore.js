@@ -19,6 +19,7 @@ class ChecklistStore {
         this.groups = {}
         this.title = null
         this.checklistId = null
+        this.language = {}
 
         this.bindActions(checklistActions)
     }
@@ -109,6 +110,10 @@ class ChecklistStore {
                 this.items[id] = items[key_item]
             }
         }
+    }
+
+    setLanguage(data) {
+      this.language = data
     }
 
     requestSuccess() {

@@ -5,8 +5,8 @@
 // Require
 
 var API = require('superagent')
-var alt = require('../alt');
-var config = require('../config');
+var alt = require('../alt')
+var config = require('../config')
 
 // Class definition
 
@@ -19,7 +19,8 @@ class ChecklistActions {
           'updateLabel',
           'updateTitle',
           'requestProgress',
-          'requestError'
+          'requestError',
+          'setLanguage'
       )
       this.checklistId = null
   }

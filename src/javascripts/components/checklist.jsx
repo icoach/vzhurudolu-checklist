@@ -23,10 +23,15 @@ var Checklist = React.createClass({
         }
     },
     componentDidMount: function() {
+        var id = null
+        var appItem = document.getElementById('vd-checklist-app')
         var parser = document.createElement('a')
         parser.href = window.location.href
 
-        var id = null
+        if (appItem.getAttribute('data-lang')) {
+          config.selectedLanguage = appItem.getAttribute('data-lang')
+        }
+
         if (parser.href.indexOf('localhost:8888') > -1) {
           id = '2341345'
           config.APIpath = configLocal.APIpath
@@ -35,6 +40,7 @@ var Checklist = React.createClass({
           id = parser.pathname.split("/")[2].trim()
         }
         checklistActions.fetchChecklist(id)
+        checklistActions.setLanguage(config[config.selectedLanguage])
         checklistStore.listen(this.onChange)
     },
     componentWillUnmount: function() {
