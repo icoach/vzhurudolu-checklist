@@ -25,6 +25,10 @@ vzhurudolu-checklist/
         └── vzhurudolu-checklist.min.css
 ```
 
+### Lokální konfigurace
+
+V adresáři `src/javascripts` je soubor `configLocal.js.example`, který je třeba zkopírovat a přejmenovat na `configLocal.js`. Soubor obsahuje cestu k lokálnímu API. Bez správného nastavení cesty nebude aplikace fungovat.
+
 ### Kompilace
 
 Při změnách je nutné celý projekt znovu zkompilovat. K dispozici jsou tasky pro zpracování stylů i javascriptů:
