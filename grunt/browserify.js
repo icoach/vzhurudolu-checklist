@@ -6,9 +6,10 @@
 module.exports = {
    dist: {
       options: {
-         transform: [
-            ["babelify", {presets: ["es2015", "react"]}]
-         ]
+        // external: ['react', 'react-dom'],
+        transform: [
+          ["babelify", { presets: ["es2015", "react"]}]
+        ]
       },
       files: {
          // if the source file has an extension of es6 then

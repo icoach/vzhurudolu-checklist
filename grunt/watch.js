@@ -9,7 +9,7 @@ module.exports = {
   },
   styles: {
     files: ['src/stylesheets/**/*'],
-    tasks: ['sass', 'postcss']
+    tasks: ['sass:dev', 'postcss']
   },
   js: {
     files: 'src/javascripts/**/*',

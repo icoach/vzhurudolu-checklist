@@ -8,8 +8,8 @@ var checklistStore = require('../store/checklistStore')
 var List = require('./list.jsx')
 var Title = require('./title.jsx')
 var classNames = require('classnames')
-var Loader = require('react-loader');
-var config = require('../config');
+var Loader = require('react-loader')
+var config = require('../config')
 
 var Checklist = React.createClass({
     getInitialState: function() {
@@ -26,14 +26,15 @@ var Checklist = React.createClass({
         parser.href = window.location.href
 
         var id = null
-        if (parser.href.indexOf('localhost:8888') === true) {
+        debugger
+        if (parser.href.indexOf('localhost:8888') > -1) {
           id = '2341345'
           config.APIpath = 'http://vzhurudolu.lcl/checklistapi/checklists/'
         }
         else {
           id = parser.pathname.split("/")[2].trim()
         }
-        checklistActions.fetchChecklist(id) // method is automagically binded by checklistStore.registerAsync()
+        checklistActions.fetchChecklist(id)
         checklistStore.listen(this.onChange)
     },
     componentWillUnmount: function() {

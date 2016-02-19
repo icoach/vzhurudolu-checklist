@@ -10957,7 +10957,10 @@ var ReactDOMOption = {
       }
     });
 
-    nativeProps.children = content;
+    if (content) {
+      nativeProps.children = content;
+    }
+
     return nativeProps;
   }
 
@@ -17126,7 +17129,7 @@ module.exports = ReactUpdates;
 
 'use strict';
 
-module.exports = '0.14.6';
+module.exports = '0.14.7';
 },{}],129:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -18221,6 +18224,7 @@ var warning = require('fbjs/lib/warning');
  */
 var EventInterface = {
   type: null,
+  target: null,
   // currentTarget is set when dispatching; no use in copying it here
   currentTarget: emptyFunction.thatReturnsNull,
   eventPhase: null,
@@ -18254,8 +18258,6 @@ function SyntheticEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEvent
   this.dispatchConfig = dispatchConfig;
   this.dispatchMarker = dispatchMarker;
   this.nativeEvent = nativeEvent;
-  this.target = nativeEventTarget;
-  this.currentTarget = nativeEventTarget;
 
   var Interface = this.constructor.Interface;
   for (var propName in Interface) {
@@ -18266,7 +18268,11 @@ function SyntheticEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEvent
     if (normalize) {
       this[propName] = normalize(nativeEvent);
     } else {
-      this[propName] = nativeEvent[propName];
+      if (propName === 'target') {
+        this.target = nativeEventTarget;
+      } else {
+        this[propName] = nativeEvent[propName];
+      }
     }
   }
 
@@ -22613,13 +22619,14 @@ var Checklist = React.createClass({
         parser.href = window.location.href;
 
         var id = null;
-        if (parser.href.indexOf('localhost:8888') === true) {
+        debugger;
+        if (parser.href.indexOf('localhost:8888') > -1) {
             id = '2341345';
             config.APIpath = 'http://vzhurudolu.lcl/checklistapi/checklists/';
         } else {
             id = parser.pathname.split("/")[2].trim();
         }
-        checklistActions.fetchChecklist(id); // method is automagically binded by checklistStore.registerAsync()
+        checklistActions.fetchChecklist(id);
         checklistStore.listen(this.onChange);
     },
     componentWillUnmount: function componentWillUnmount() {
@@ -23057,15 +23064,17 @@ module.exports = config;
 'use strict';
 
 //
-// Checklist App
+// VzhuruDolu: Checklist App
 //
 // @author: Martin Staněk (github: @icoach)
 // -------------------
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+
 var Checklist = require('./components/checklist.jsx');
 
+// requires id="vd-checklist-app" to be in the template
 ReactDOM.render(React.createElement(Checklist), document.querySelector('#vd-checklist-app'));
 
 },{"./components/checklist.jsx":180,"react":173,"react-dom":43}],187:[function(require,module,exports){
