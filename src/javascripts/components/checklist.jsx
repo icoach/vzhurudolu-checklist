@@ -10,6 +10,7 @@ var Title = require('./title.jsx')
 var classNames = require('classnames')
 var Loader = require('react-loader')
 var config = require('../config')
+var configLocal = require('../configLocal')
 
 var Checklist = React.createClass({
     getInitialState: function() {
@@ -26,10 +27,9 @@ var Checklist = React.createClass({
         parser.href = window.location.href
 
         var id = null
-        debugger
         if (parser.href.indexOf('localhost:8888') > -1) {
           id = '2341345'
-          config.APIpath = 'http://vzhurudolu.lcl/checklistapi/checklists/'
+          config.APIpath = configLocal.APIpath
         }
         else {
           id = parser.pathname.split("/")[2].trim()

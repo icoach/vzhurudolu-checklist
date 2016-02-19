@@ -22601,6 +22601,7 @@ var Title = require('./title.jsx');
 var classNames = require('classnames');
 var Loader = require('react-loader');
 var config = require('../config');
+var configLocal = require('../configLocal');
 
 var Checklist = React.createClass({
     displayName: 'Checklist',
@@ -22619,10 +22620,9 @@ var Checklist = React.createClass({
         parser.href = window.location.href;
 
         var id = null;
-        debugger;
         if (parser.href.indexOf('localhost:8888') > -1) {
             id = '2341345';
-            config.APIpath = 'http://vzhurudolu.lcl/checklistapi/checklists/';
+            config.APIpath = configLocal.APIpath;
         } else {
             id = parser.pathname.split("/")[2].trim();
         }
@@ -22682,7 +22682,7 @@ var Checklist = React.createClass({
 
 module.exports = Checklist;
 
-},{"../actions/checklistActions":178,"../config":185,"../store/checklistStore":187,"./list.jsx":183,"./title.jsx":184,"classnames":9,"react":173,"react-loader":44}],181:[function(require,module,exports){
+},{"../actions/checklistActions":178,"../config":185,"../configLocal":186,"../store/checklistStore":188,"./list.jsx":183,"./title.jsx":184,"classnames":9,"react":173,"react-loader":44}],181:[function(require,module,exports){
 'use strict';
 
 //
@@ -22854,7 +22854,7 @@ var Item = React.createClass({
 
 module.exports = Item;
 
-},{"../actions/checklistActions":178,"../store/checklistStore":187,"classnames":9,"react":173}],182:[function(require,module,exports){
+},{"../actions/checklistActions":178,"../store/checklistStore":188,"classnames":9,"react":173}],182:[function(require,module,exports){
 'use strict';
 
 //
@@ -22920,7 +22920,7 @@ var ItemForm = React.createClass({
 
 module.exports = ItemForm;
 
-},{"../actions/checklistActions":178,"../store/checklistStore":187,"react":173}],183:[function(require,module,exports){
+},{"../actions/checklistActions":178,"../store/checklistStore":188,"react":173}],183:[function(require,module,exports){
 'use strict';
 
 //
@@ -23063,6 +23063,17 @@ module.exports = config;
 },{}],186:[function(require,module,exports){
 'use strict';
 
+// Local development configuration file for Checklist App
+
+var configLocal = {
+  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
+};
+
+module.exports = configLocal;
+
+},{}],187:[function(require,module,exports){
+'use strict';
+
 //
 // VzhuruDolu: Checklist App
 //
@@ -23077,7 +23088,7 @@ var Checklist = require('./components/checklist.jsx');
 // requires id="vd-checklist-app" to be in the template
 ReactDOM.render(React.createElement(Checklist), document.querySelector('#vd-checklist-app'));
 
-},{"./components/checklist.jsx":180,"react":173,"react-dom":43}],187:[function(require,module,exports){
+},{"./components/checklist.jsx":180,"react":173,"react-dom":43}],188:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -23218,4 +23229,4 @@ var ChecklistStore = function () {
 
 module.exports = alt.createStore(ChecklistStore);
 
-},{"../actions/checklistActions":178,"../alt":179,"../config":185,"superagent":176}]},{},[186]);
+},{"../actions/checklistActions":178,"../alt":179,"../config":185,"superagent":176}]},{},[187]);
