@@ -87,7 +87,16 @@ var Item = React.createClass({
     renderInfo: function(desc) {
       var description = <span dangerouslySetInnerHTML={{ __html: "(" + desc + ")" }} />
       return (
-        <div className='checklist-item__desc'>{description}</div>
+        <div className='checklist-item__desc'>
+          <button className='checklist-item__button checklist-item__button--close' onClick={this.handleInfo} aria-hidden="false" aria-label="Close" type="button">
+            <svg className='checklist-glyph' width="24" height="24" viewBox="0 0 24 24">
+              <path d="M14.6648,12.0134 L19.9268,6.75125 C20.3685,6.30982 20.3685,5.59112 19.9268,5.14431 L18.855,4.07302 C18.4133,3.63159 17.6944,3.63159 17.2473,4.07302 L11.9852,9.33527 L6.75274,4.10532 C6.31109,3.66389 5.59204,3.66389 5.14504,4.10532 L4.07319,5.17661 C3.63154,5.61804 3.63154,6.33674 4.07319,6.78356 L9.30568,12.0135 L4.07861,17.2353 C3.63696,17.6768 3.63696,18.3954 4.07861,18.8423 L5.15042,19.9135 C5.59208,20.355 6.31112,20.355 6.75812,19.9135 L11.9852,14.6917 L17.2231,19.927 C17.6648,20.3685 18.3838,20.3685 18.8308,19.927 L19.9026,18.8557 C20.3443,18.4143 20.3443,17.6956 19.9026,17.2488 L14.6648,12.0134 Z"></path>
+            </svg>
+
+          </button>
+
+          {description}
+        </div>
       )
     },
 
