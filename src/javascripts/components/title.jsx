@@ -4,6 +4,7 @@
 
 var React = require('react')
 var checklistActions = require('../actions/checklistActions')
+var config = require('../config')
 
 var Title = React.createClass({
     getInitialState: function() {

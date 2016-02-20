@@ -1,0 +1,10 @@
+// Local development configuration file Example
+
+// 1. Copy this file and rename it to configLocal.js
+// 2. Set correct path to your local API
+
+var configLocal = {
+  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
+}
+
+module.exports = configLocal

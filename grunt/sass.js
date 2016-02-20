@@ -4,25 +4,25 @@
 // -----------------
 
 module.exports = {
-  main: {
+  dev: {
     options: {
-      includePaths: ['scss'],
-      precision: 6,
-      sourceComments: false,
-      sourceMap: true,
-      outputStyle: 'expanded'
+      outputStyle: 'expanded',
+      sourceComments: true,
+      sourceMap: true
     },
     files: [
       { dest: 'dist/stylesheets/<%= package.name %>.css', src: 'src/stylesheets/index.scss' }
     ]
-  }
+  },
 
-  // dist: {
-  //   options: {
-  //     outputStyle: 'compressed'
-  //   },
-  //   files: [
-  //     { dest: 'dist/stylesheets/<%= package.name %>.min.css', src: 'src/stylesheets/index.scss' }
-  //   ]
-  // }
+  dist: {
+    options: {
+      outputStyle: 'compressed',
+      sourceComments: false,
+      sourceMap: true
+    },
+    files: [
+      { dest: 'dist/stylesheets/<%= package.name %>.min.css', src: 'src/stylesheets/index.scss' }
+    ]
+  }
 };

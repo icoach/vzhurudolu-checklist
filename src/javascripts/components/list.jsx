@@ -14,9 +14,9 @@ var List = React.createClass({
         for (var key in data) {
             var item = data[key]
             items.push(
-                <Item 
-                    item_id={item.id} 
-                    key={item.id} 
+                <Item
+                    item_id={item.id}
+                    key={item.id}
                     done={item.done}
                     desc={item.desc}
                     label={item.label} />

@@ -2,23 +2,50 @@
 ![Bower version](https://img.shields.io/bower/v/bootstrap.svg?style=flat)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE)
 
-<!-- todo -->
+## Instalace
 
-## Quick start
+Aplikace Checklist je postavena na ReactJS. K instalaci jsou k dispozici následující možnosti:
 
-<!-- todo -->
+- [Stáhněte si aktuální poslední verzi](https://github.com/icoach/vzhurudolu-checklist/archive/master.zip).
+- Naklonujte si repositář `git clone https://github.com/icoach/vzhurudolu-checklist.git`.
+- Nainstalujte jako závislot přes [Bower](http://bower.io): `bower install https://github.com/icoach/vzhurudolu-checklist.git`.
 
-### How to use
+Checklist využívá pro všechny úkoly `grunt`. K tomu je třeba nainstalovat všechny balíčky příkazem `npm install`.
 
-<!-- todo -->
+### Jak používat
 
-## Creator
+Aplikace vyžaduje pro své spuštění javascript a styly. Naleznete je v plain a minifikované formě v adresáři `dist`. Javascript obsahuje všechny potřebné knihovny včetně `react` a `react-dom`.
+
+```
+vzhurudolu-checklist/
+└── dist/
+    └── javascripts
+        └── vzhurudolu-checklist.min.js
+    └── stylesheets
+        └── vzhurudolu-checklist.min.css
+```
+
+Checklist se natahuje do div elementu `<div id="vd-checklist-app" data-lang="cs"></div>`. Volitelně je možné zvolit jazyk v jakém je aplikace prezentována. K dispozici jsou varianty `cs` a `en`.
+
+### Lokální konfigurace
+
+V adresáři `src/javascripts` je soubor `configLocal.js.example`, který je třeba zkopírovat a přejmenovat na `configLocal.js`. Soubor obsahuje cestu k lokálnímu API. Bez správného nastavení cesty nebude aplikace fungovat.
+
+### Kompilace
+
+Při změnách je nutné celý projekt znovu zkompilovat. K dispozici jsou tasky pro zpracování stylů i javascriptů:
+
+- Kompletní produkční build: `grunt`
+- Kompilace javasript: `grunt js`
+- Kompilace stylů: `grunt css`
+- Statický webserver s livereload: `grunt server`
+
+Statický server se pouští na adrese `localhost:8888` a automaticky se reloaduje při každé změně. Před pushnutím nových verzí do repositáře je nutné pamatovat na puštění produkčního buildu.
+
+
+## Autor
 
 **Martin Staněk**
 
 - <https://twitter.com/@koucik>
 - <https://github.com/@skywalkapps>
-
-## Copyright and license
-
-Code and documentation copyright 2015 Martin Staněk. Code released under [the MIT license](https://github.com/skywalkapps/bootstrap-dropmenu/blob/master/LICENSE).

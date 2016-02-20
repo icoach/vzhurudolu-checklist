@@ -8,8 +8,9 @@ var checklistStore = require('../store/checklistStore')
 var List = require('./list.jsx')
 var Title = require('./title.jsx')
 var classNames = require('classnames')
-var Loader = require('react-loader');
-var config = require('../config');
+var Loader = require('react-loader')
+var config = require('../config')
+var configLocal = require('../configLocal')
 
 var Checklist = React.createClass({
     getInitialState: function() {
@@ -22,18 +23,24 @@ var Checklist = React.createClass({
         }
     },
     componentDidMount: function() {
+        var id = null
+        var appItem = document.getElementById('vd-checklist-app')
         var parser = document.createElement('a')
         parser.href = window.location.href
 
-        var id = null
-        if (parser.href.indexOf('localhost:8888') === true) {
+        if (appItem.getAttribute('data-lang')) {
+          config.selectedLanguage = appItem.getAttribute('data-lang')
+        }
+
+        if (parser.href.indexOf('localhost:8888') > -1) {
           id = '2341345'
-          config.APIpath = 'http://vzhurudolu.lcl/checklistapi/checklists/'
+          config.APIpath = configLocal.APIpath
         }
         else {
           id = parser.pathname.split("/")[2].trim()
         }
-        checklistActions.fetchChecklist(id) // method is automagically binded by checklistStore.registerAsync()
+        checklistActions.fetchChecklist(id)
+        checklistActions.setLanguage(config[config.selectedLanguage])
         checklistStore.listen(this.onChange)
     },
     componentWillUnmount: function() {

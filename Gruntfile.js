@@ -17,15 +17,16 @@ module.exports = function(grunt) {
   // -------------------------
 
   // Default build task
-  grunt.registerTask('default', ['clean', 'copy', 'dist-css', 'dist-js']);
+  grunt.registerTask('default', ['clean', 'css', 'js']);
+  grunt.registerTask('build-dev', ['clean', 'css-dev', 'js-dev']);
 
   // JS tasks
-  grunt.registerTask('dist-js', ['browserify', 'uglify']);
-  grunt.registerTask('dev-js', ['browserify', 'jshint']);
+  grunt.registerTask('js', ['browserify', 'uglify']);
+  grunt.registerTask('js-dev', ['browserify']); // TODO: jshint
 
   // CSS tasks
-  grunt.registerTask('dist-css', ['sass']);
-  grunt.registerTask('dev-css', ['sass', 'csslint']);
+  grunt.registerTask('css', ['sass']);
+  grunt.registerTask('css-dev', ['sass:dev', 'csslint']);
 
   // Server task
   grunt.registerTask('server', ['connect:server', 'watch']);
