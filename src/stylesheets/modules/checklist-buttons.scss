@@ -29,12 +29,17 @@
   }
 }
 
+.checklist-item__button--close {
+  background: transparent;
+}
+
+// Glyphs
 .checklist-glyph {
-  fill: #999;
+  fill: #b5b397;
   transform: translate(0, 0);
 
   .checklist-item__button:hover & {
-    fill: #555;
+    fill: #5FA316;
   }
 }
 
