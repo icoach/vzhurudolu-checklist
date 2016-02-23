@@ -33,7 +33,7 @@ var Checklist = React.createClass({
         }
 
         if (parser.href.indexOf('localhost:8888') > -1) {
-          id = '0000000001'
+          id = configLocal.mock_id
           config.APIpath = configLocal.APIpath
         }
         else {
