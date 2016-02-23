@@ -7,7 +7,7 @@ var config = {
 
   cs: {
     taskComplete: 'Označit úkol za splněný',
-    taskInfo: 'Zobrazit informace',
+    taskInfo: 'Více informací a tipy na nástroje',
     taskEdit: 'Upravit úkol',
     taskDelete: 'Smazat úkol',
     descriptionClose: 'Zavřít',
@@ -17,7 +17,7 @@ var config = {
   },
   en: {
     taskComplete: 'Mark task as completed',
-    taskInfo: 'More information',
+    taskInfo: 'More information and useful tools',
     taskEdit: 'Edit task',
     taskDelete: 'Delete task',
     descriptionClose: 'Close',

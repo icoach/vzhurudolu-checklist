@@ -22937,7 +22937,7 @@ var Item = React.createClass({
         { className: 'cell checklist-item__toggle' },
         React.createElement(
           'button',
-          { className: classNames('checklist-item__button', { 'checklist-item__button--complete': this.props.done }), onClick: this.handleToggle, 'aria-hidden': 'false', 'aria-label': this.state.language.taskComplete, type: 'button' },
+          { className: classNames('checklist-item__button', { 'checklist-item__button--complete': this.props.done }), onClick: this.handleToggle, 'aria-hidden': 'false', 'aria-label': this.state.language.taskComplete, title: this.state.language.taskComplete, type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22956,7 +22956,7 @@ var Item = React.createClass({
         { className: 'cell checklist-item__actions' },
         React.createElement(
           'button',
-          { onClick: this.handleInfo, 'aria-hidden': 'false', 'aria-label': this.state.language.taskInfo, className: descButtonClasses, type: 'button' },
+          { onClick: this.handleInfo, 'aria-hidden': 'false', 'aria-label': this.state.language.taskInfo, title: this.state.language.taskInfo, className: descButtonClasses, type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22965,7 +22965,7 @@ var Item = React.createClass({
         ),
         React.createElement(
           'button',
-          { onClick: this.handleEdit, 'aria-hidden': 'false', 'aria-label': this.state.language.taskEdit, className: 'checklist-item__button', type: 'button' },
+          { onClick: this.handleEdit, 'aria-hidden': 'false', 'aria-label': this.state.language.taskEdit, title: this.state.language.taskEdit, className: 'checklist-item__button', type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -22974,7 +22974,7 @@ var Item = React.createClass({
         ),
         React.createElement(
           'button',
-          { onClick: this.handleRemove, 'aria-hidden': 'false', 'aria-label': this.state.language.taskDelete, className: 'checklist-item__button', type: 'button' },
+          { onClick: this.handleRemove, 'aria-hidden': 'false', 'aria-label': this.state.language.taskDelete, title: this.state.language.taskDelete, className: 'checklist-item__button', type: 'button' },
           React.createElement(
             'svg',
             { className: 'checklist-glyph', width: '24', height: '24', viewBox: '0 0 24 24' },
@@ -23197,7 +23197,7 @@ var config = {
 
   cs: {
     taskComplete: 'Označit úkol za splněný',
-    taskInfo: 'Zobrazit informace',
+    taskInfo: 'Více informací a tipy na nástroje',
     taskEdit: 'Upravit úkol',
     taskDelete: 'Smazat úkol',
     descriptionClose: 'Zavřít',
@@ -23207,7 +23207,7 @@ var config = {
   },
   en: {
     taskComplete: 'Mark task as completed',
-    taskInfo: 'More information',
+    taskInfo: 'More information and useful tools',
     taskEdit: 'Edit task',
     taskDelete: 'Delete task',
     descriptionClose: 'Close',
