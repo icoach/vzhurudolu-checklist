@@ -47,5 +47,5 @@ Statický server se pouští na adrese `localhost:8888` a automaticky se reloadu
 
 **Martin Staněk**
 
-- <https://twitter.com/@koucik>
-- <https://github.com/@skywalkapps>
+- <https://twitter.com/koucik>
+- <https://github.com/skywalkapps>
