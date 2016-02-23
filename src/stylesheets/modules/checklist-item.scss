@@ -41,6 +41,10 @@
 //   padding: 10px 30px 10px 0;
 // }
 
+.checklist-item__label {
+  cursor: pointer;
+}
+
 .checklist-item__label > input {
     padding: 0;
     border: 0;
@@ -100,11 +104,3 @@
   position: relative;
 }
 
-// TODO
-.checklist-item__desc {
-    position: absolute;
-    background: #fff;
-    padding: 20px 40px;
-    border: 1px solid #fcfcf2;
-    z-index: 1;
-}

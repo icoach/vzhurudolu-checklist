@@ -22894,7 +22894,7 @@ var Item = React.createClass({
   },
 
   renderInfo: function renderInfo(desc) {
-    var description = React.createElement('span', { dangerouslySetInnerHTML: { __html: "(" + desc + ")" } });
+    var description = React.createElement('span', { dangerouslySetInnerHTML: { __html: "<small>" + desc + "</small>" } });
     return React.createElement(
       'div',
       { className: 'checklist-item__desc' },
