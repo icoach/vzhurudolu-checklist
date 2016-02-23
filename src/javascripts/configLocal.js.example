@@ -4,7 +4,8 @@
 // 2. Set correct path to your local API
 
 var configLocal = {
-  APIpath: 'http://vzhurudolu.lcl/checklistapi/checklists/'
+  APIpath: 'http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/',
+  mock_id: 'abs34xay23'
 }
 
 module.exports = configLocal
