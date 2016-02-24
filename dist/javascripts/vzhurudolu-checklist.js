@@ -22740,7 +22740,7 @@ var Checklist = React.createClass({
         }
 
         if (parser.href.indexOf('localhost:8888') > -1) {
-            id = '0000000001';
+            id = configLocal.mock_id;
             config.APIpath = configLocal.APIpath;
         } else {
             id = parser.pathname.split("/")[2].trim();
@@ -23228,7 +23228,8 @@ module.exports = config;
 // 2. Set correct path to your local API
 
 var configLocal = {
-  APIpath: 'http://vzhurudolu.localhost/checklistapi/checklists/'
+  APIpath: 'http://private-a13d4-checklist5.apiary-mock.com/checklist-api/checklists/',
+  mock_id: 'abs34xay23'
 };
 
 module.exports = configLocal;
