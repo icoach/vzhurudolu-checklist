@@ -132,12 +132,17 @@
 }
 
 /* line 41, /Users/machal/Sites/vd-checklist/www/src/stylesheets/modules/checklist-buttons.scss */
-.checklist-item__button:hover .checklist-glyph {
+.checklist-item__button:hover .checklist-glyph,
+.checklist-item__button:focus .checklist-glyph,
+.checklist-item__button:active .checklist-glyph {
   fill: #5FA316;
 }
 
-/* line 47, /Users/machal/Sites/vd-checklist/www/src/stylesheets/modules/checklist-buttons.scss */
-.checklist-glyph--active, .checklist-item__button:hover .checklist-glyph--active {
+/* line 49, /Users/machal/Sites/vd-checklist/www/src/stylesheets/modules/checklist-buttons.scss */
+.checklist-glyph--active,
+.checklist-item__button:hover .checklist-glyph--active,
+.checklist-item__button:focus .checklist-glyph--active,
+.checklist-item__button:active .checklist-glyph--active {
   fill: #868460;
 }
 

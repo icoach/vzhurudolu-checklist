@@ -38,13 +38,18 @@
   fill: #b5b397;
   transform: translate(0, 0);
 
-  .checklist-item__button:hover & {
+  .checklist-item__button:hover &,
+  .checklist-item__button:focus &,
+  .checklist-item__button:active & {
     fill: #5FA316;
   }
 }
 
 .checklist-glyph--active {
-  &, .checklist-item__button:hover & {
+  &,
+  .checklist-item__button:hover &,
+  .checklist-item__button:focus &,
+  .checklist-item__button:active & {
     fill: $checklist-complete-color;
   }
 }
