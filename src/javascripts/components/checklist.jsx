@@ -40,7 +40,8 @@ var Checklist = React.createClass({
           id = parser.pathname.split("/")[2].trim()
         }
         else {
-          id = window.location.hostname.split("/")[2].trim()
+          debugger
+          id = window.location.pathname.split("/")[2].trim()
         }
 
         checklistActions.fetchChecklist(id)
