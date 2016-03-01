@@ -36,9 +36,13 @@ var Checklist = React.createClass({
           id = configLocal.mock_id
           config.APIpath = configLocal.APIpath
         }
-        else {
+        else if (parser.pathname) {
           id = parser.pathname.split("/")[2].trim()
         }
+        else {
+          id = window.location.hostname.split("/")[2].trim()
+        }
+
         checklistActions.fetchChecklist(id)
         checklistActions.setLanguage(config[config.selectedLanguage])
         checklistStore.listen(this.onChange)
