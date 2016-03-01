@@ -22629,9 +22629,11 @@ var Checklist = React.createClass({
             id = configLocal.mock_id;
             config.APIpath = configLocal.APIpath;
         } else if (parser.pathname) {
-            id = parser.pathname.split("/")[2].trim();
+            var arr = parser.pathname.split("/");
+            id = arr[arr.length - 1].trim();
         } else {
-            id = window.location.pathname.split("/")[2].trim();
+            var arr = window.location.pathname.split("/");
+            id = arr[arr.length - 1].trim();
         }
 
         checklistActions.fetchChecklist(id);
