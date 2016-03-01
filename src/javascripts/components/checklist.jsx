@@ -40,7 +40,6 @@ var Checklist = React.createClass({
           id = parser.pathname.split("/")[2].trim()
         }
         else {
-          debugger
           id = window.location.pathname.split("/")[2].trim()
         }
 

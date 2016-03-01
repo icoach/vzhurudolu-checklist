@@ -22631,7 +22631,6 @@ var Checklist = React.createClass({
         } else if (parser.pathname) {
             id = parser.pathname.split("/")[2].trim();
         } else {
-            debugger;
             id = window.location.pathname.split("/")[2].trim();
         }
 
